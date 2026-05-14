@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پیراهن کتان اورسایز | A project</title>
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/product.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-links">
+            <a href="index.html">فروشگاه</a>
+            <a href="#">کالکشن‌ها</a>
+        </div>
+
+        <div class="logo">Aproject</div>
+
+        <div class="header-links">
+            <a href="cart.html" class="cart-icon">
+                سبد خرید
+                <span class="cart-count">۲</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Product Section -->
+    <main class="product-container">
+
+        <!-- ستون سمت راست: تصاویر محصول -->
+        <div class="product-gallery">
+            <!-- تصویر اصلی (وکتور مینیمال) -->
+            <div class="main-image"></div>
+
+            <!-- تصاویر کوچک (تامنیل‌ها) -->
+            <div class="thumbnail-list">
+                <div class="thumbnail active">
+                    <!-- نمای جلو -->
+                    <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="300" height="400" fill="#f4f4f0" />
+                        <path d="M100,60 L200,60 L240,140 L210,140 L210,360 L90,360 L90,140 L60,140 Z" fill="none"
+                            stroke="#333" stroke-width="4" />
+                    </svg>
+                </div>
+                <div class="thumbnail">
+                    <!-- نمای پشت (بدون دکمه) -->
+                    <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="300" height="400" fill="#eaeaea" />
+                        <path d="M100,60 L200,60 L240,140 L210,140 L210,360 L90,360 L90,140 L60,140 Z" fill="none"
+                            stroke="#555" stroke-width="4" />
+                    </svg>
+                </div>
+                <div class="thumbnail">
+                    <!-- نمای نزدیک (زوم روی بافت) -->
+                    <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="300" height="400" fill="#f4f4f0" />
+                        <line x1="0" y1="100" x2="300" y2="100" stroke="#ddd" stroke-width="1" />
+                        <line x1="0" y1="200" x2="300" y2="200" stroke="#ddd" stroke-width="1" />
+                        <line x1="0" y1="300" x2="300" y2="300" stroke="#ddd" stroke-width="1" />
+                        <circle cx="150" cy="200" r="15" fill="#333" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- ستون سمت چپ: جزئیات و خرید -->
+        <div class="product-info">
+
+
+
+            <h2 class="brand-name">A PROJECT</h2>
+            <h1 class="product-title">پیراهن کتان اورسایز خنثی</h1>
+            <div class="product-price">۲,۸۰۰,۰۰۰ تومان</div>
+
+            <p class="product-description">
+                طراحی شده با الهام از خطوط معماری مدرن. این پیراهن از کتان ۱۰۰٪ ارگانیک با بافتی متراکم دوخته شده است که
+                علاوه بر ایستایی فوق‌العاده، حس لطافت بی‌نظیری را به پوست منتقل می‌کند. برشی آزاد و اورسایز برای
+                استایل‌های لایه‌لایه (Layering).
+            </p>
+
+            <!-- انتخاب رنگ -->
+            <div class="selector-group">
+                <div class="selector-label">
+                    <span>رنگ: شیری (Ivory)</span>
+                </div>
+                <div class="color-options">
+                    <label>
+                        <input type="radio" name="color" value="ivory" checked>
+                        <span class="color-swatch" style="background-color: #f4f4f0;" title="شیری"></span>
+                    </label>
+                    <label>
+                        <input type="radio" name="color" value="charcoal">
+                        <span class="color-swatch" style="background-color: #333333;" title="زغالی"></span>
+                    </label>
+                    <label>
+                        <input type="radio" name="color" value="sand">
+                        <span class="color-swatch" style="background-color: #d1c7b7;" title="شنی"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- انتخاب سایز -->
+            <div class="selector-group">
+                <div class="selector-label">
+                    <span>سایز:</span>
+                    <span class="size-guide-link">راهنمای سایز</span>
+                </div>
+                <div class="size-options">
+                    <label>
+                        <input type="radio" name="size" value="s">
+                        <div class="size-box">Small</div>
+                    </label>
+                    <label>
+                        <input type="radio" name="size" value="m" checked>
+                        <div class="size-box">Medium</div>
+                    </label>
+                    <label>
+                        <input type="radio" name="size" value="l">
+                        <div class="size-box">Large</div>
+                    </label>
+                    <label>
+                        <!-- این سایز به عنوان ناموجود (disabled) تنظیم شده است -->
+                        <input type="radio" name="size" value="xl" disabled>
+                        <div class="size-box">X-Large</div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- دکمه افزودن به سبد -->
+            <div class="action-row">
+                <div class="quantity-selector" style="display:none;"    >
+                    <button type="button">-</button>
+                    <input type="text" value="1" readonly>
+                    <button type="button">+</button>
+                </div>
+                <!-- با کلیک روی این دکمه کاربر به صفحه سبد خرید هدایت می‌شود -->
+                <button class="add-to-cart-btn">
+                    افزودن به سبد خرید
+                </button>
+            </div>
+
+            <!-- آکاردئون‌های اطلاعات تکمیلی (بدون نیاز به JS) -->
+            <div class="product-accordions">
+                <details open>
+                    <summary>جزئیات و نگهداری</summary>
+                    <div class="details-content">
+                        <ul>
+                            <li>جنس: ۱۰۰٪ کتان ارگانیک ترک</li>
+                            <li>طراحی اورسایز با سرشانه‌های افتاده</li>
+                            <li>شستشو با ماشین لباسشویی در دمای ۳۰ درجه</li>
+                            <li>از مایع سفیدکننده استفاده نشود</li>
+                            <li>اتوکشی با دمای متوسط</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>ارسال و بازگشت کالا</summary>
+                    <div class="details-content">
+                        <p>ارسال استاندارد برای تمامی سفارشات بالای ۵ میلیون تومان رایگان است. تحویل در تهران طی ۲۴ ساعت
+                            و در شهرستان‌ها بین ۲ تا ۴ روز کاری انجام می‌شود.</p>
+                        <p>شما می‌توانید تا ۷ روز پس از دریافت کالا، در صورت عدم استفاده و جدا نشدن تگ‌ها، آن را
+                            بازگردانید.</p>
+                    </div>
+                </details>
+            </div>
+
+        </div>
+    </main>
+    <script type="module" src="assets/js/product-page.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+@font-face {
+  font-family: "Vazir";
+  src: url("../fonts/Vazir-FD-WOL.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Vazir";
+  src: url("../fonts/Vazir-Medium-FD-WOL.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+body {
+  font-family: "Vazir";
+  background-color: var(--gray-light);
+  color: var(--black);
+  line-height: 1.8;
+  font-size: 14px;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+a {
+  text-decoration: none;
+  color: #111; /* رنگ متن را هم در صورت نیاز تنظیم کنید */
+}

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A project | مزون پوشاک مینیمال</title>
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/landing.css">
+
+
+</head>
+
+<body>
+
+    <!-- مخزن آیکون‌های مینیمال (Thin Lines) کاملاً آفلاین -->
+    <svg style="display: none;">
+        <!-- آیکون کیسه خرید به جای سبد خرید چرخ‌دار (مناسب مزون) -->
+
+        <symbol id="icon-bag" viewBox="0 0 24 24">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </symbol>
+        <!-- آیکون جستجوی ظریف -->
+        <symbol id="icon-search" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </symbol>
+        <!-- آیکون کاربر (حساب کاربری) -->
+        <symbol id="icon-user" viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+        </symbol>
+        <!-- منوی همبرگری ظریف -->
+        <symbol id="icon-menu" viewBox="0 0 24 24">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </symbol>
+    </svg>
+
+    <!-- هدر مینیمال -->
+    <header>
+        <div class="container flex items-center justify-between">
+
+            <!-- دکمه منو موبایل (فقط در سایز کوچک نمایش داده می‌شود) -->
+            <button class="mobile-menu-btn"><svg class="icon-svg">
+                    <use href="#icon-menu"></use>
+                </svg></button>
+
+            <!-- منوی اصلی (ناوبری متنی) -->
+            <nav class="main-nav">
+                <a href="#new-arrivals">جدیدترین‌ها</a>
+                <a href="#">کالکشن زنانه</a>
+                <a href="#">کالکشن مردانه</a>
+                <a href="#">اکسسوری</a>
+            </nav>
+
+            <!-- لوگوی تایپوگرافی برند -->
+            <div class="brand-logo">Aproject</div>
+
+            <!-- آیکون‌های سمت چپ -->
+            <div class="header-actions">
+                <button aria-label="جستجو"><svg class="icon-svg">
+                        <use href="#icon-search"></use>
+                    </svg></button>
+                <button aria-label="حساب کاربری"><svg class="icon-svg">
+                        <use href="#icon-user"></use>
+                    </svg></button>
+                <button aria-label="کیسه خرید">
+                    <a href="cart.html">
+                        <svg class="icon-svg">
+                            <use href="#icon-bag"></use>
+                        </svg>
+                        <span class="bag-count">1</span>
+                    </a>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- بخش اصلی (Lookbook Hero) -->
+    <section class="hero container">
+        <div class="hero-layout">
+            <div class="hero-text">
+                <span class="hero-season">Spring / Summer 2026</span>
+                <h1 class="hero-title">"آ پِراجِکت"<br>
+                    <br>
+                    سادگـی و اصـالت
+                </h1>
+                <p style="color: var(--gray-text); margin-bottom: 3rem; max-width: 400px;">
+                    کالکشن جدید ما، ترکیبی از پارچه‌های ارگانیک، دوخت بی‌نقص و طراحی بدون زمان است.
+                    <span class="arrow">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 5v14"></path>
+                            <path d="M19 12l-7 7-7-7"></path>
+                        </svg>
+                    </span>
+
+                </p>
+                <a href="#collections" class="hero-btn">مشاهده کالکشن</a>
+            </div>
+
+            <!-- جایگاه عکس مدل (استایل ژورنالی) -->
+            <!-- تصویر اختصاصی و آفلاین برند A PROJECT -->
+            <div class="hero-image" style="padding: 0; background: transparent;">
+                <svg viewBox="0 0 800 1000" width="100%" height="100%" preserveAspectRatio="xMidYMid slice"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <!-- گرادیان ملایم شبیه به نورپردازی روی پارچه -->
+                        <linearGradient id="fabricGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#F4F4F0" />
+                            <stop offset="50%" stop-color="#E8E8E2" />
+                            <stop offset="100%" stop-color="#D8D8D0" />
+                        </linearGradient>
+                    </defs>
+
+                    <!-- پس‌زمینه رنگ کرم/خاکستری بسیار روشن (رنگ کلاسیک مزون‌ها) -->
+                    <rect width="100%" height="100%" fill="url(#fabricGrad)" />
+
+                    <!-- خطوط مینیمال انتزاعی (تداعی‌کننده برش پارچه، الگوهای خیاطی و دراپه لباس) -->
+                    <path d="M -100,200 C 300,400 200,800 900,600" fill="none" stroke="#ffffff" stroke-width="2"
+                        opacity="0.6" />
+                    <path d="M 0,400 C 400,300 300,900 800,1000" fill="none" stroke="#ffffff" stroke-width="1"
+                        opacity="0.4" />
+                    <path d="M 200,-100 C 400,500 600,600 800,-100" fill="none" stroke="#000000" stroke-width="1"
+                        opacity="0.04" />
+
+                    <!-- تایپوگرافی لوکس و مجله‌ای برند A PROJECT -->
+                    <g transform="translate(400, 500)" text-anchor="middle">
+                        <!-- نام اصلی برند -->
+                        <text y="-40" font-family="Georgia, 'Times New Roman', serif" font-size="70"
+                            font-weight="normal" letter-spacing="20" fill="#111111">A PROJECT</text>
+
+                        <!-- زیرعنوان -->
+                        <text y="20" font-family="'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="300"
+                            letter-spacing="10" fill="#555555">CLOTHING STUDIOS</text>
+
+                        <!-- خط جداکننده ظریف -->
+                        <line x1="-30" y1="60" x2="30" y2="60" stroke="#333333" stroke-width="1" />
+
+                        <!-- شعار مینیمال -->
+                        <text y="100" font-family="'Helvetica Neue', Arial, sans-serif" font-size="9" font-weight="300"
+                            letter-spacing="5" fill="#777777">MINIMAL APPAREL</text>
+                    </g>
+                </svg>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- دسته‌بندی‌های تصویری (Grid) -->
+    <section class="container" id="collections">
+        <div class="section-header" style="margin-bottom: 30px; text-align: center;">
+            <h2 class="section-title" style="font-size: 2.5rem;  color: #222;">خطوط طراحی</h2>
+            <div style="width: 60px; height: 4px; background: #000; margin: 10px auto;"></div>
+        </div>
+
+        <div class="collections-grid">
+            <!-- کالکشن 1: زنانه -->
+            <a href="#" class="collection-item">
+                <img src="./assets/pics/men-dress-12.jpg" alt="زنانه" class="collection-img">
+                <div class="collection-overlay"></div>
+                <div class="collection-content">
+                    <span class="collection-name">شلوار</span>
+                    <span class="collection-btn">مشاهده کالکشن</span>
+                </div>
+            </a>
+
+            <!-- کالکشن 2: مردانه -->
+            <a href="#" class="collection-item">
+                <img src="./assets/pics/men-dress-15.jpg" alt="مردانه" class="collection-img">
+                <div class="collection-overlay"></div>
+                <div class="collection-content">
+                    <span class="collection-name">تیشرت</span>
+                    <span class="collection-btn">مشاهده کالکشن</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- محصولات جدید (New Arrivals) -->
+    <section class="container" style="margin-top: 6rem;" id="new-arrivals">
+        <div class="section-header"
+            style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+            <h2 class="section-title" style="margin: 0;">تازه‌های مزون</h2>
+            <a href="shop.html" style="font-size: 0.85rem; border-bottom: 1px solid var(--black); padding-bottom: 2px;">نمایش
+                همه</a>
+        </div>
+
+        <!-- این کانتینر توسط جاوااسکریپت پر می‌شود -->
+        <div id="product-grid" class="product-scroll">
+            <!-- محصولات اینجا رندر می‌شوند -->
+        </div>
+    </section>
+
+
+    <!-- خبرنامه مینیمال -->
+    <section class="newsletter">
+        <div class="container">
+            <h2>به کلوپ A project بپیوندید</h2>
+            <p>برای دریافت اخبار کالکشن‌های جدید و دعوتنامه‌های رویدادهای خصوصی ثبت‌نام کنید.</p>
+            <form class="newsletter-form">
+                <input type="tel" placeholder="شماره موبایل" inputmode="numeric" pattern="[0-9]*"
+                    aria-label="شماره موبایل" />
+
+                <button type="button">
+                    ثبت‌نام
+                </button>
+
+            </form>
+        </div>
+    </section>
+
+    <!-- فوتر لوکس مونوکروم -->
+    <footer>
+        <div class="container">
+            <div class="grid grid-cols-4 footer-grid">
+
+                <!-- ستون برند -->
+                <div>
+                    <div class="brand-logo"
+                        style="color: white; font-size: 1.5rem; text-align: right; margin-bottom: 1rem;">A project</div>
+                    <p style="color: var(--gray-text); font-size: 0.8rem; line-height: 2;">
+                        طراحی شده برای کسانی که کیفیت، دوام و زیبایی بدون تکلف را درک می‌کنند.
+                    </p>
+                </div>
+
+                <!-- ستون راهنما -->
+                <div>
+                    <h4 class="footer-title">خدمات مشتریان</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">پیگیری سفارش</a></li>
+                        <li><a href="#">رویه بازگشت کالا</a></li>
+                        <li><a href="#">راهنمای سایز</a></li>
+                        <li><a href="#">سوالات متداول</a></li>
+                    </ul>
+                </div>
+
+                <!-- ستون درباره -->
+                <div>
+                    <h4 class="footer-title">درباره برند</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">داستان ما</a></li>
+                        <li><a href="#">آتلیه طراحی</a></li>
+                        <li><a href="#">مسئولیت اجتماعی (پایداری)</a></li>
+                        <li><a href="#">فرصت‌های شغلی</a></li>
+                    </ul>
+                </div>
+
+                <!-- ستون تماس -->
+                <div>
+                    <h4 class="footer-title">بوتیک‌ها</h4>
+                    <ul class="footer-links">
+                        <li>تهران، الهیه، مجتمع تجاری مدرن</li>
+                        <li style="direction: ltr; text-align: right; margin-top: 1rem;">+98 21 2222 3333</li>
+                        <li style="direction: ltr; text-align: right;">info@Aproject.com</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <div class="copyright">
+                    © 2026 A project STUDIO. ALL RIGHTS RESERVED.
+                </div>
+                <div class="social-links" style="display: flex; gap: 1rem; letter-spacing: 1px;">
+                    <a href="#">INSTAGRAM</a>
+                    <a href="#">PINTEREST</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script type="module" src="assets/js/main.js" defer></script>
+
+</body>
+
+</html>
