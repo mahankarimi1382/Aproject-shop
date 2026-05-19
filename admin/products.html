@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیریت محصولات | Aproject Admin</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <style>
+        :root { --sidebar-width: 250px; }
+        body { display: flex; background-color: #f8f9fa; }
+        .sidebar { width: var(--sidebar-width); background-color: #111; color: #fff; height: 100vh; position: fixed; padding: 2rem 1.5rem; }
+        .sidebar h2 { font-size: 1.2rem; letter-spacing: 2px; margin-bottom: 3rem; text-align: center; }
+        .nav-links { list-style: none; }
+        .nav-links li { margin-bottom: 1.5rem; }
+        .nav-links a { color: #ccc; text-decoration: none; font-size: 0.9rem; }
+        .nav-links a.active { color: #fff; }
+        .main-content { margin-right: var(--sidebar-width); flex-grow: 1; padding: 3rem; }
+        .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .btn { padding: 0.6rem 1.2rem; cursor: pointer; border: none; font-family: inherit; font-size: 0.85rem; }
+        .btn-primary { background: #111; color: #fff; }
+        table { width: 100%; border-collapse: collapse; background: #fff; }
+        th, td { text-align: right; padding: 1rem; border-bottom: 1px solid #eee; }
+        .product-img { width: 50px; height: 60px; object-fit: cover; }
+
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal-content { background: #fff; margin: 2% auto; padding: 2rem; width: 80%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.85rem; }
+        .form-group input, .form-group select { width: 100%; padding: 0.6rem; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>APROJECT</h2>
+        <ul class="nav-links">
+            <li><a href="index.html">داشبورد</a></li>
+            <li><a href="categories.html">دسته‌بندی‌ها</a></li>
+            <li><a href="products.html" class="active">محصولات</a></li>
+            <li><a href="orders.html">سفارشات</a></li>
+            <li><a href="customers.html">مشتریان</a></li>
+            <li><a href="#" id="logoutBtn">خروج</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header-row">
+            <h1>محصولات</h1>
+            <button class="btn btn-primary" id="addProductBtn">افزودن محصول جدید</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>تصویر</th>
+                    <th>نام محصول</th>
+                    <th>دسته‌بندی</th>
+                    <th>قیمت</th>
+                    <th>موجودی</th>
+                    <th>ویژه</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="productsTableBody"></tbody>
+        </table>
+    </div>
+
+    <!-- Add/Edit Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">افزودن محصول</h2>
+            <form id="productForm">
+                <input type="hidden" id="productId">
+                <div class="form-group">
+                    <label>نام محصول</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="form-group">
+                    <label>قیمت (تومان)</label>
+                    <input type="number" id="productPrice" required>
+                </div>
+                <div class="form-group">
+                    <label>مسیر تصویر (URL)</label>
+                    <input type="text" id="productImage" required placeholder="assets/pics/...">
+                </div>
+                <div class="form-group">
+                    <label>موجودی کل</label>
+                    <input type="number" id="productStock" required>
+                </div>
+                <div class="form-group">
+                    <label>دسته‌بندی</label>
+                    <select id="productCategory"></select>
+                </div>
+                <div class="form-group">
+                    <label>مدیریت سایزها</label>
+                    <div id="sizeManagementContainer" style="border: 1px solid #eee; padding: 1rem;">
+                        <!-- Size inputs will be added here -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="isFeatured"> نمایش در ویترین صفحه اصلی</label>
+                </div>
+                <div style="display:flex; gap:1rem; margin-top:2rem;">
+                    <button type="submit" class="btn btn-primary">ذخیره</button>
+                    <button type="button" class="btn" onclick="closeModal()">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let categories = [];
+        const DEFAULT_SIZES = ['S', 'M', 'L', 'XL', 'Free Size'];
+
+        function renderSizeInputs(productSizes = []) {
+            const container = document.getElementById('sizeManagementContainer');
+            container.innerHTML = DEFAULT_SIZES.map(size => {
+                const existing = productSizes.find(s => s.size_name === size);
+                return `
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                        <input type="checkbox" class="size-enabled" data-size="${size}" ${existing && existing.is_enabled ? 'checked' : ''}>
+                        <span style="width: 80px;">${size}</span>
+                        <input type="number" class="size-stock" data-size="${size}" placeholder="موجودی" value="${existing ? existing.stock : 0}" style="width: 80px; padding: 4px;">
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function loadData() {
+            const [prodRes, catRes] = await Promise.all([
+                fetch('../api/admin/products.php'),
+                fetch('../api/admin/categories.php')
+            ]);
+
+            const products = (await prodRes.json()).data;
+            categories = (await catRes.json()).data;
+
+            const catSelect = document.getElementById('productCategory');
+            catSelect.innerHTML = '<option value="">بدون دسته‌بندی</option>' +
+                categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+
+            const body = document.getElementById('productsTableBody');
+            body.innerHTML = products.map(p => `
+                <tr>
+                    <td><img src="../${p.image}" class="product-img"></td>
+                    <td>${p.name}</td>
+                    <td>${p.category_name || '-'}</td>
+                    <td>${Number(p.price).toLocaleString('fa-IR')}</td>
+                    <td>${p.stock}</td>
+                    <td>${p.is_featured ? '✅' : '❌'}</td>
+                    <td>
+                        <button onclick="editProduct(${p.id})">ویرایش</button>
+                        <button onclick="deleteProduct(${p.id})">حذف</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        const modal = document.getElementById('productModal');
+        document.getElementById('addProductBtn').onclick = () => {
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('modalTitle').textContent = 'افزودن محصول';
+            renderSizeInputs();
+            modal.style.display = 'block';
+        };
+
+        function closeModal() { modal.style.display = 'none'; }
+
+        async function editProduct(id) {
+            const res = await fetch(`../api/admin/products.php?id=${id}`);
+            const product = (await res.json()).data;
+
+            document.getElementById('productId').value = product.id;
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productImage').value = product.image;
+            document.getElementById('productStock').value = product.stock;
+            document.getElementById('productCategory').value = product.category_id || '';
+            document.getElementById('isFeatured').checked = product.is_featured == 1;
+
+            renderSizeInputs(product.sizes || []);
+
+            document.getElementById('modalTitle').textContent = 'ویرایش محصول';
+            modal.style.display = 'block';
+        }
+
+        document.getElementById('productForm').onsubmit = async (e) => {
+            e.preventDefault();
+
+            const sizes = [];
+            document.querySelectorAll('.size-enabled').forEach((checkbox, index) => {
+                const sizeName = checkbox.dataset.size;
+                const stockInput = document.querySelectorAll('.size-stock')[index];
+                sizes.push({
+                    size_name: sizeName,
+                    is_enabled: checkbox.checked ? 1 : 0,
+                    stock: parseInt(stockInput.value) || 0
+                });
+            });
+
+            const data = {
+                id: document.getElementById('productId').value,
+                name: document.getElementById('productName').value,
+                price: document.getElementById('productPrice').value,
+                image: document.getElementById('productImage').value,
+                stock: document.getElementById('productStock').value,
+                category_id: document.getElementById('productCategory').value,
+                is_featured: document.getElementById('isFeatured').checked ? 1 : 0,
+                sizes: sizes
+            };
+
+            const res = await fetch('../api/admin/products.php', {
+                method: 'POST',
+                body: JSON.stringify(data)
+            });
+            if ((await res.json()).success) {
+                closeModal();
+                loadData();
+            }
+        };
+
+        async function deleteProduct(id) {
+            if (confirm('آیا از حذف این محصول اطمینان دارید؟')) {
+                await fetch(`../api/admin/products.php?id=${id}`, { method: 'DELETE' });
+                loadData();
+            }
+        }
+
+        loadData();
+    </script>
+</body>
+</html>

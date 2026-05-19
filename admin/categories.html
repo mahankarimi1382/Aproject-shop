@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>مدیریت دسته‌بندی‌ها | Aproject Admin</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <style>
+        :root { --sidebar-width: 250px; }
+        body { display: flex; background-color: #f8f9fa; }
+        .sidebar { width: var(--sidebar-width); background-color: #111; color: #fff; height: 100vh; position: fixed; padding: 2rem 1.5rem; }
+        .sidebar h2 { font-size: 1.2rem; letter-spacing: 2px; margin-bottom: 3rem; text-align: center; }
+        .nav-links { list-style: none; }
+        .nav-links li { margin-bottom: 1.5rem; }
+        .nav-links a { color: #ccc; text-decoration: none; font-size: 0.9rem; }
+        .nav-links a.active { color: #fff; }
+        .main-content { margin-right: var(--sidebar-width); flex-grow: 1; padding: 3rem; }
+        .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .btn { padding: 0.6rem 1.2rem; cursor: pointer; border: none; font-family: inherit; }
+        .btn-primary { background: #111; color: #fff; }
+        table { width: 100%; border-collapse: collapse; background: #fff; }
+        th, td { text-align: right; padding: 1rem; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>APROJECT</h2>
+        <ul class="nav-links">
+            <li><a href="index.html">داشبورد</a></li>
+            <li><a href="categories.html" class="active">دسته‌بندی‌ها</a></li>
+            <li><a href="products.html">محصولات</a></li>
+            <li><a href="orders.html">سفارشات</a></li>
+            <li><a href="customers.html">مشتریان</a></li>
+            <li><a href="#" id="logoutBtn">خروج</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header-row">
+            <h1>دسته‌بندی‌ها</h1>
+            <div style="display:flex; gap:1rem;">
+                <input type="text" id="catName" placeholder="نام دسته‌بندی جدید">
+                <button class="btn btn-primary" id="addCatBtn">افزودن</button>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>شناسه</th>
+                    <th>نام</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="catTableBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        async function loadCats() {
+            const res = await fetch('../api/admin/categories.php');
+            const cats = (await res.json()).data;
+            document.getElementById('catTableBody').innerHTML = cats.map(c => `
+                <tr>
+                    <td>${c.id}</td>
+                    <td>${c.name}</td>
+                    <td><button onclick="deleteCat(${c.id})">حذف</button></td>
+                </tr>
+            `).join('');
+        }
+
+        document.getElementById('addCatBtn').onclick = async () => {
+            const name = document.getElementById('catName').value;
+            if(!name) return;
+            await fetch('../api/admin/categories.php', {
+                method: 'POST',
+                body: JSON.stringify({ name })
+            });
+            document.getElementById('catName').value = '';
+            loadCats();
+        };
+
+        async function deleteCat(id) {
+            if(confirm('آیا از حذف این دسته‌بندی اطمینان دارید؟')) {
+                await fetch(`../api/admin/categories.php?id=${id}`, { method: 'DELETE' });
+                loadCats();
+            }
+        }
+        loadCats();
+    </script>
+</body>
+</html>
