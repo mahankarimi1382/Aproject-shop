@@ -25,7 +25,7 @@ function formatPrice(price) {
 
 // گرفتن محصول از API
 async function fetchProduct(id) {
-  const res = await fetch(`/shop/api/products-by-id.php?ids=${id}`);
+  const res = await fetch(`api/products-by-id.php?ids=${id}`);
   const data = await res.json();
 
   if (data.success && data.data.length) {

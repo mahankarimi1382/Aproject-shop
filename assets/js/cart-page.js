@@ -87,13 +87,13 @@ function renderCartItems(products, cart) {
   summaryRows[2].textContent = "وابسته به آدرس"; // ارسال
   summaryTotal.textContent = `${formatPrice(totalPrice)} تومان`;
 
-  attachEventListeners();
+  attachEventListeners(products);
 }
 
 
 // ========================================
 // کنترل دکمه‌ها برای افزایش/کاهش/حذف آیتم
-function attachEventListeners() {
+function attachEventListeners(products) {
   document.querySelectorAll(".minus-btn").forEach((btn) => {
     btn.addEventListener("click", () => changeQuantity(btn.dataset.id, -1));
   });
@@ -137,6 +137,89 @@ async function initCartPage() {
   const ids = cart.map((c) => c.id);
   const products = await getProductsByIds(ids);
   renderCartItems(products, cart);
+  setupCheckout(products);
+}
+
+// ========================================
+// مدیریت مودال و فرم پرداخت
+function setupCheckout(products) {
+  const modal = document.getElementById("checkoutModal");
+  const checkoutBtn = document.querySelector(".checkout-btn");
+  const closeBtn = document.querySelector(".close-modal");
+  const checkoutForm = document.getElementById("checkoutForm");
+
+  if (!checkoutBtn || !modal) return;
+
+  checkoutBtn.addEventListener("click", () => {
+    const cart = getCart();
+    if (cart.length === 0) {
+      alert("سبد خرید شما خالی است.");
+      return;
+    }
+    modal.style.display = "block";
+  });
+
+  closeBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+
+  window.addEventListener("click", (event) => {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  });
+
+  checkoutForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const cart = getCart();
+    const formData = new FormData(checkoutForm);
+    const customerData = {
+      fullName: formData.get("fullName"),
+      phone: formData.get("phone"),
+      address: formData.get("address"),
+    };
+
+    const orderData = {
+      customer: customerData,
+      items: cart.map(item => {
+        const product = products.find(p => p.id == item.id);
+        return {
+          id: item.id,
+          quantity: item.quantity,
+          price: product ? product.price : 0,
+          size: item.size || "نامشخص"
+        };
+      }),
+      totalPrice: cart.reduce((total, item) => {
+        const product = products.find(p => p.id == item.id);
+        return total + (product ? product.price * item.quantity : 0);
+      }, 0)
+    };
+
+    try {
+      const response = await fetch("api/checkout.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert("سفارش شما با موفقیت ثبت شد.");
+        saveCart([]); // خالی کردن سبد خرید
+        window.location.href = "index.html";
+      } else {
+        alert("خطا: " + result.message);
+      }
+    } catch (error) {
+      console.error("Error submitting order:", error);
+      alert("خطایی در ثبت سفارش رخ داد.");
+    }
+  });
 }
 
 
