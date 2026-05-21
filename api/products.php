@@ -1,16 +1,27 @@
 <?php
+header('Content-Type: application/json; charset=utf-8');
 require "config/db.php";
 
-$sql = "SELECT id, name, price, image, stock FROM products";
-$result = mysqli_query($conn, $sql);
+try {
+    $sql = "SELECT id, name, price, image, stock FROM products";
+    $result = mysqli_query($conn, $sql);
 
-$products = [];
-
-while ($row = mysqli_fetch_assoc($result)) {
-    $products[] = $row;
+    if ($result) {
+        $products = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        echo json_encode([
+            "success" => true,
+            "data" => $products
+        ]);
+    } else {
+        echo json_encode([
+            "success" => false,
+            "message" => mysqli_error($conn)
+        ]);
+    }
+} catch (Exception $e) {
+    echo json_encode([
+        "success" => false,
+        "message" => $e->getMessage()
+    ]);
 }
-
-echo json_encode([
-    "success" => true,
-    "data" => $products
-]);
+?>

@@ -45,37 +45,40 @@
         <div class="container flex items-center justify-between">
 
             <!-- دکمه منو موبایل (فقط در سایز کوچک نمایش داده می‌شود) -->
-            <button class="mobile-menu-btn"><svg class="icon-svg">
+            <button class="mobile-menu-btn" aria-label="منو"><svg class="icon-svg">
                     <use href="#icon-menu"></use>
                 </svg></button>
 
             <!-- منوی اصلی (ناوبری متنی) -->
             <nav class="main-nav">
-                <a href="#new-arrivals">جدیدترین‌ها</a>
-                <a href="#">کالکشن زنانه</a>
-                <a href="#">کالکشن مردانه</a>
-                <a href="#">اکسسوری</a>
+                <a href="index.html">صفحه اصلی</a>
+                <a href="shop.html">فروشگاه</a>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle">دسته‌بندی‌ها</a>
+                    <div class="dropdown-menu" id="categories-dropdown">
+                        <!-- دسته‌بندی‌ها توسط JS بارگذاری می‌شوند -->
+                    </div>
+                </div>
+                <a href="index.html#new-arrivals">جدیدترین‌ها</a>
             </nav>
 
             <!-- لوگوی تایپوگرافی برند -->
-            <div class="brand-logo">Aproject</div>
+            <a href="index.html" class="brand-logo">Aproject</a>
 
             <!-- آیکون‌های سمت چپ -->
             <div class="header-actions">
-                <button aria-label="جستجو"><svg class="icon-svg">
+                <a href="shop.html" aria-label="جستجو"><svg class="icon-svg">
                         <use href="#icon-search"></use>
-                    </svg></button>
-                <button aria-label="حساب کاربری"><svg class="icon-svg">
+                    </svg></a>
+                <a href="admin/login.html" aria-label="حساب کاربری"><svg class="icon-svg">
                         <use href="#icon-user"></use>
-                    </svg></button>
-                <button aria-label="کیسه خرید">
-                    <a href="cart.html">
-                        <svg class="icon-svg">
-                            <use href="#icon-bag"></use>
-                        </svg>
-                        <span class="bag-count">1</span>
-                    </a>
-                </button>
+                    </svg></a>
+                <a href="cart.html" aria-label="کیسه خرید" class="cart-btn">
+                    <svg class="icon-svg">
+                        <use href="#icon-bag"></use>
+                    </svg>
+                    <span class="bag-count">0</span>
+                </a>
             </div>
         </div>
     </header>
@@ -274,6 +277,7 @@
         </div>
     </footer>
     <script type="module" src="assets/js/main.js" defer></script>
+    <script type="module" src="assets/js/landing-page.js" defer></script>
 
 </body>
 

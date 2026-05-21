@@ -1,139 +1,155 @@
+import { updateCartCount } from "./main.js";
 import { getCart, saveCart } from "./cart.js";
 
-function updateCartCount() {
-  const cart = getCart();
-  const bagCount = document.querySelector(".cart-count");
-
-  if (!bagCount) return;
-
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-  bagCount.textContent = totalItems;
-}
-// گرفتن id از URL
 function getProductIdFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("id");
+    const params = new URLSearchParams(window.location.search);
+    return params.get("id");
 }
 
-
-// فرمت قیمت
 function formatPrice(price) {
-  return Number(price).toLocaleString("fa-IR");
+    return Number(price).toLocaleString("fa-IR");
 }
 
-
-// گرفتن محصول از API
 async function fetchProduct(id) {
-  const res = await fetch(`api/products-by-id.php?ids=${id}`);
-  const data = await res.json();
-
-  if (data.success && data.data.length) {
-    return data.data[0];
-  }
-
-  return null;
+    try {
+        const res = await fetch(`api/products-by-id.php?ids=${id}`);
+        const data = await res.json();
+        if (data.success && data.data.length) {
+            return data.data[0];
+        }
+    } catch (error) {
+        console.error("Error fetching product:", error);
+    }
+    return null;
 }
 
-
-// نمایش اطلاعات محصول در صفحه
 function renderProduct(product) {
+    const titleEl = document.querySelector(".product-title");
+    const priceEl = document.querySelector(".product-price");
+    const imageEl = document.getElementById("productImage");
+    const descEl = document.getElementById("productDescription");
+    const detailsEl = document.getElementById("productDetails");
 
-  document.querySelector(".product-title").textContent = product.name;
-
-  document.querySelector(".product-price").textContent =
-    formatPrice(product.price) + " تومان";
-
-  document.title = product.name + " | Aproject";
-
-  const mainImage = document.querySelector(".main-image");
-
-  mainImage.innerHTML = `
-    <img src="${product.image}" alt="${product.name}">
-  `;
+    if (titleEl) titleEl.textContent = product.name;
+    if (priceEl) priceEl.textContent = formatPrice(product.price) + " تومان";
+    if (imageEl) {
+        imageEl.src = product.image;
+        imageEl.alt = product.name;
+    }
+    if (descEl) {
+        descEl.textContent = product.description || "طراحی شده با الهام از خطوط معماری مدرن. این محصول از مواد با کیفیت برتر دوخته شده است که علاوه بر ایستایی فوق‌العاده، حس لطافت بی‌نظیری را به پوست منتقل می‌کند.";
+    }
+    if (detailsEl) {
+        // Fallback details if product.details is not in DB
+        detailsEl.innerHTML = product.details ? product.details : `
+            <li>جنس: با کیفیت برتر</li>
+            <li>طراحی مدرن و مینیمال</li>
+            <li>شستشو با دقت در دمای ۳۰ درجه</li>
+            <li>اتوکشی با دمای متوسط</li>
+        `;
+    }
+    document.title = product.name + " | Aproject";
 }
 
-
-// افزودن به سبد
 function addToCart(productId, qty) {
+    let cart = getCart();
+    const existing = cart.find(item => item.id == productId);
 
-  let cart = getCart();
-
-  const existing = cart.find(item => item.id == productId);
-
-  if (existing) {
-    existing.quantity += qty;
-  } else {
-    cart.push({
-      id: Number(productId),
-      quantity: qty
-    });
-  }
-
-  saveCart(cart);
-
+    if (existing) {
+        existing.quantity += qty;
+    } else {
+        cart.push({
+            id: Number(productId),
+            quantity: qty
+        });
+    }
+    saveCart(cart);
 }
 
+function updateCartItemQty(productId, qty) {
+    let cart = getCart();
+    const item = cart.find(item => item.id == productId);
+    if (item) {
+        item.quantity = qty;
+        if (item.quantity <= 0) {
+            cart = cart.filter(i => i.id != productId);
+        }
+        saveCart(cart);
+        updateCartCount();
+        checkProductInCart(productId);
+    }
+}
 
-// دکمه افزودن به سبد
 function setupAddToCart(productId) {
+    const btn = document.getElementById("addToCartBtn");
+    if (!btn) return;
 
-  const btn = document.querySelector(".add-to-cart-btn");
+    btn.addEventListener("click", () => {
+        const qtyInput = document.getElementById("quantityInput");
+        const qty = Number(qtyInput ? qtyInput.value : 1);
+        addToCart(productId, qty);
+        updateCartCount();
+        checkProductInCart(productId);
+    });
 
-  btn.addEventListener("click", () => {
+    const decreaseBtn = document.getElementById("decreaseQty");
+    const increaseBtn = document.getElementById("increaseQty");
+    const qtyInput = document.getElementById("quantityInput");
 
-    const qty = Number(
-      document.querySelector(".quantity-selector input").value
-    );
+    if (decreaseBtn && increaseBtn && qtyInput) {
+        decreaseBtn.addEventListener("click", () => {
+            let qty = Number(qtyInput.value);
+            if (qty > 1) {
+                qty--;
+                updateCartItemQty(productId, qty);
+            } else {
+                updateCartItemQty(productId, 0);
+            }
+        });
 
-    addToCart(productId, qty);
-    updateCartCount()
-    checkProductInCart(productId)
-  });
-
+        increaseBtn.addEventListener("click", () => {
+            let qty = Number(qtyInput.value);
+            qty++;
+            updateCartItemQty(productId, qty);
+        });
+    }
 }
-
-
-// لود صفحه
-async function initProductPage() {
-
-  const productId = getProductIdFromUrl();
-  if (!productId) return;
-
-  const product = await fetchProduct(productId);
-  if (!product) return;
-
-  renderProduct(product);
-
-  checkProductInCart(productId); // ✅ این خط اضافه شود
-
-  setupAddToCart(productId);
-
-}
-
 
 function checkProductInCart(productId) {
-  const cart = getCart();
+    const cart = getCart();
+    const existing = cart.find(item => item.id == productId);
 
-  const existing = cart.find(item => item.id == productId);
+    const qtySelector = document.querySelector(".quantity-selector");
+    const addBtn = document.getElementById("addToCartBtn");
+    const qtyInput = document.getElementById("quantityInput");
 
-  const qtySelector = document.querySelector(".quantity-selector");
-  const addBtn = document.querySelector(".add-to-cart-btn");
+    if (!existing) {
+        if (addBtn) addBtn.style.display = "block";
+        if (qtySelector) qtySelector.style.display = "none";
+        return;
+    }
 
-  if (!existing) {
-    qtySelector.style.display = "none";
-    return;
-  }
+    if (addBtn) addBtn.style.display = "none";
+    if (qtySelector) {
+        qtySelector.style.display = "flex";
+        if (qtyInput) qtyInput.value = existing.quantity;
+    }
+}
 
-  // اگر محصول در سبد بود
-  addBtn.style.display = "none";
+async function initProductPage() {
+    const productId = getProductIdFromUrl();
+    if (!productId) return;
 
-  qtySelector.style.display = "flex";
+    const product = await fetchProduct(productId);
+    if (!product) {
+        const titleEl = document.querySelector(".product-title");
+        if (titleEl) titleEl.textContent = "محصول یافت نشد";
+        return;
+    }
 
-  qtySelector.querySelector("input").value = existing.quantity;
+    renderProduct(product);
+    checkProductInCart(productId);
+    setupAddToCart(productId);
 }
 
 document.addEventListener("DOMContentLoaded", initProductPage);
-document.addEventListener("DOMContentLoaded", () => {
-  updateCartCount();
-});

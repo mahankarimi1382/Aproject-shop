@@ -1,34 +1,31 @@
+import { updateCartCount } from "./main.js";
+
 document.addEventListener('DOMContentLoaded', () => {
-    // انتخاب المان‌های DOM
     const productsContainer = document.getElementById('productsContainer'); 
     const searchInput = document.getElementById('searchInput'); 
     const searchBtn = document.getElementById('searchBtn'); 
     const sortRadios = document.querySelectorAll('input[name="sort"]'); 
-    const searchBox = document.querySelector('.search-box'); // برای قرار دادن تگ زیر آن
+    const categoryFilter = document.getElementById('categoryFilter');
+    const searchBox = document.querySelector('.search-box');
 
-    // اگر در صفحه‌ای غیر از فروشگاه هستیم، کد اجرا نشود
     if (!productsContainer) return;
 
-    // ایجاد کانتینر برای تگ جستجو و قرار دادن آن دقیقاً زیر باکس جستجو
     const searchBadgeContainer = document.createElement('div');
     searchBadgeContainer.style.marginTop = '10px';
     if (searchBox) {
         searchBox.parentNode.insertBefore(searchBadgeContainer, searchBox.nextSibling);
     }
 
-    // فرمت‌بندی قیمت
     const formatPrice = (price) => {
         return new Intl.NumberFormat('fa-IR').format(price) + ' تومان';
     };
 
-    // مدیریت تگ جستجو
     const updateSearchBadge = (term) => {
         if (!term) {
-            searchBadgeContainer.innerHTML = ''; // اگر کلمه‌ای نبود، تگ پاک شود
+            searchBadgeContainer.innerHTML = '';
             return;
         }
         
-        // ساخت تگ با دکمه ضربدر
         searchBadgeContainer.innerHTML = `
             <div style="display: inline-flex; align-items: center; background-color: #f0f0f0; border: 1px solid #ddd; border-radius: 20px; padding: 5px 12px; font-size: 13px; color: #333;">
                 <span>نتیجه برای: <strong>${term}</strong></span>
@@ -36,55 +33,86 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        // رویداد کلیک روی دکمه ضربدر تگ
         document.getElementById('clearSearchBtn').addEventListener('click', () => {
-            if (searchInput) searchInput.value = ''; // پاک کردن اینپوت
-            fetchProducts(); // فراخوانی مجدد محصولات (بدون سرچ)
+            if (searchInput) searchInput.value = '';
+            fetchProducts();
         });
     };
 
-    // دریافت و نمایش محصولات
+    const fetchCategories = async () => {
+        try {
+            const res = await fetch('api/categories.php');
+            const data = await res.json();
+            if (data.success) {
+                renderCategoryFilters(data.data);
+
+                // Check if there is a category_id in URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const catId = urlParams.get('category_id');
+                if (catId) {
+                    const radio = document.querySelector(`input[name="category"][value="${catId}"]`);
+                    if (radio) {
+                        radio.checked = true;
+                    }
+                }
+                fetchProducts();
+            }
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
+    };
+
+    const renderCategoryFilters = (categories) => {
+        if (!categoryFilter) return;
+
+        const currentSelected = document.querySelector('input[name="category"]:checked')?.value || "0";
+
+        categoryFilter.innerHTML = `
+            <li><label><input type="radio" name="category" value="0" ${currentSelected === "0" ? 'checked' : ''}> همه</label></li>
+        ` + categories.map(cat => `
+            <li><label><input type="radio" name="category" value="${cat.id}" ${currentSelected == cat.id ? 'checked' : ''}> ${cat.name}</label></li>
+        `).join("");
+
+        // Re-attach listeners
+        document.querySelectorAll('input[name="category"]').forEach(radio => {
+            radio.addEventListener('change', fetchProducts);
+        });
+    };
+
     const fetchProducts = async () => {
-        // خواندن مقادیر جستجو
         const q = searchInput ? searchInput.value.trim() : '';
-        
-        // آپدیت کردن تگ جستجو با کلمه جدید (یا پاک کردن آن اگر سرچ خالی است)
         updateSearchBadge(q);
         
-        // خواندن مقدار مرتب‌سازی و تبدیل خط تیره به آندرلاین برای هماهنگی با بک‌اند
         const activeSort = document.querySelector('input[name="sort"]:checked');
         let sort = activeSort ? activeSort.value : 'newest';
-        sort = sort.replace('-', '_');
 
-        // حالت لودینگ
+        const activeCategory = document.querySelector('input[name="category"]:checked');
+        const category_id = activeCategory ? activeCategory.value : '0';
+
         productsContainer.innerHTML = '<p class="loading-text" style="text-align:center; width:100%; grid-column: 1/-1;">در حال بارگذاری محصولات...</p>';
 
         try {
-            // ساخت آدرس API
-            const apiUrl = new URL('api/shop.php', window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1));
+            const apiUrl = new URL('api/shop.php', window.location.href);
             if (q) apiUrl.searchParams.append('q', q);
             if (sort) apiUrl.searchParams.append('sort', sort);
+            if (category_id !== '0') apiUrl.searchParams.append('category_id', category_id);
 
             const response = await fetch(apiUrl);
-            
             if (!response.ok) throw new Error('خطا در ارتباط با سرور');
             
             const result = await response.json();
 
-            // بررسی موفقیت‌آمیز بودن درخواست
-            if (result.success === true) {
+            if (result.success) {
                 renderProducts(result.data);
             } else {
                 productsContainer.innerHTML = `<p class="error-text" style="text-align:center; width:100%; grid-column: 1/-1;">${result.message || 'خطا در دریافت اطلاعات.'}</p>`;
             }
-
         } catch (error) {
             console.error('Fetch Error:', error);
             productsContainer.innerHTML = '<p class="error-text" style="text-align:center; width:100%; grid-column: 1/-1;">خطایی در بارگذاری محصولات رخ داد.</p>';
         }
     };
 
-    // رندر کردن محصولات در HTML
     const renderProducts = (products) => {
         productsContainer.innerHTML = ''; 
 
@@ -112,14 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Event Listeners (رویدادها)
-    
-    // ۱. کلیک روی دکمه جستجو
     if (searchBtn) {
         searchBtn.addEventListener('click', fetchProducts);
     }
 
-    // ۲. زدن دکمه Enter در فیلد جستجو
     if (searchInput) {
         searchInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -129,11 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ۳. تغییر رادیو باتن‌های مرتب‌سازی
     sortRadios.forEach(radio => {
         radio.addEventListener('change', fetchProducts);
     });
 
-    // بارگذاری اولیه محصولات
-    fetchProducts();
+    fetchCategories();
 });
