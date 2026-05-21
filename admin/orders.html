@@ -2,21 +2,45 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مدیریت سفارشات | Aproject Admin</title>
-    <link rel="stylesheet" href="../assets/css/global.css">
     <style>
         :root { --sidebar-width: 250px; }
-        body { display: flex; background-color: #f8f9fa; }
-        .sidebar { width: var(--sidebar-width); background-color: #111; color: #fff; height: 100vh; position: fixed; padding: 2rem 1.5rem; }
+        body { display: flex; background-color: #f8f9fa; margin: 0; font-family: sans-serif; }
+
+        /* Sidebar */
+        .sidebar { width: var(--sidebar-width); background-color: #111; color: #fff; height: 100vh; position: fixed; padding: 2.5rem 1.5rem; box-sizing: border-box; }
         .sidebar h2 { font-size: 1.2rem; letter-spacing: 2px; margin-bottom: 3rem; text-align: center; }
-        .nav-links { list-style: none; }
-        .nav-links li { margin-bottom: 1.5rem; }
-        .nav-links a { color: #ccc; text-decoration: none; font-size: 0.9rem; }
-        .nav-links a.active { color: #fff; }
-        .main-content { margin-right: var(--sidebar-width); flex-grow: 1; padding: 3rem; }
-        table { width: 100%; border-collapse: collapse; background: #fff; }
-        th, td { text-align: right; padding: 1rem; border-bottom: 1px solid #eee; }
-        .status-select { padding: 4px; font-family: inherit; }
+        .nav-links { list-style: none; padding: 0; margin: 0; }
+        .nav-links li { margin-bottom: 1.25rem; }
+        .nav-links a { color: #aaa; text-decoration: none; font-size: 0.9rem; display: block; }
+        .nav-links a:hover { color: #fff; }
+        .nav-links a.active { color: #fff; font-weight: 600; }
+
+        /* Main Content */
+        .main-content { margin-right: var(--sidebar-width); flex-grow: 1; padding: 3rem; box-sizing: border-box; }
+        
+        /* Table */
+        table { width: 100%; border-collapse: collapse; background: #fff; margin-top: 2rem; }
+        th { font-size: 0.85rem; color: #555; font-weight: 600; text-align: right; padding: 1.1rem 1rem; border-bottom: 1px solid #eee; }
+        td { text-align: right; padding: 1.1rem 1rem; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        tbody tr:hover { background: #fafafa; }
+        
+        /* Buttons & Inputs */
+        .btn { padding: 0.3rem 0.6rem; cursor: pointer; border: none; background: #f0f0f0; font-size: 0.8rem; font-family: inherit; }
+        .btn:hover { background: #e0e0e0; }
+        .btn-primary { background: #111; color: #fff; padding: 0.55rem 1.2rem; }
+        .btn-primary:hover { background: #000; }
+        .status-select { padding: 0.3rem; border: 1px solid #ddd; font-family: inherit; }
+
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 1000; inset: 0; background: rgba(0,0,0,0.5); }
+        .modal-content { background: #fff; margin: 3% auto; padding: 2rem; width: 80%; max-width: 600px; max-height: 70vh; overflow-y: auto; }
+        
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-right: 0; padding: 1.5rem; }
+        }
     </style>
 </head>
 <body>
@@ -34,7 +58,7 @@
 
     <div class="main-content">
         <h1>سفارشات</h1>
-        <table style="margin-top: 2rem;">
+        <table>
             <thead>
                 <tr>
                     <th>شناسه</th>
@@ -50,8 +74,8 @@
     </div>
 
     <!-- Order Details Modal -->
-    <div id="orderModal" class="modal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
-        <div class="modal-content" style="background:#fff; margin:5% auto; padding:2rem; width:80%; max-width:600px;">
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
             <h2>جزئیات سفارش</h2>
             <div id="orderDetailsContent" style="margin-top:1.5rem;"></div>
             <button onclick="closeOrderModal()" class="btn btn-primary" style="margin-top:2rem;">بستن</button>
@@ -84,7 +108,7 @@
                         </select>
                     </td>
                     <td>${new Date(o.created_at).toLocaleDateString('fa-IR')}</td>
-                    <td><button onclick="viewOrder(${o.id})">مشاهده جزئیات</button></td>
+                    <td><button class="btn" onclick="viewOrder(${o.id})">مشاهده جزئیات</button></td>
                 </tr>
             `).join('');
         }
@@ -102,7 +126,7 @@
             const order = (await res.json()).data;
 
             orderContent.innerHTML = `
-                <div style="margin-bottom: 2rem;">
+                <div style="margin-bottom: 2rem; line-height: 2;">
                     <p><strong>مشتری:</strong> ${order.full_name}</p>
                     <p><strong>تلفن:</strong> ${order.phone_number}</p>
                     <p><strong>آدرس:</strong> ${order.address}</p>
@@ -116,7 +140,7 @@
                             <th>محصول</th>
                             <th>سایز</th>
                             <th>تعداد</th>
-                            <th>قیمت واحد</th>
+                            <th>قیمت</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -130,7 +154,7 @@
                         `).join('')}
                     </tbody>
                 </table>
-                <p style="margin-top:1.5rem; font-size:1.2rem;"><strong>جمع کل:</strong> ${Number(order.total_price).toLocaleString('fa-IR')} تومان</p>
+                <p style="margin-top:1.5rem; font-size:1.1rem;"><strong>جمع کل:</strong> ${Number(order.total_price).toLocaleString('fa-IR')} تومان</p>
             `;
             orderModal.style.display = 'block';
         }

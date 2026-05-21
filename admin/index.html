@@ -8,96 +8,281 @@
     <style>
         :root {
             --sidebar-width: 250px;
+            --sidebar-bg: #111;
+            --sidebar-text: #fff;
+            --page-bg: #f8f9fa;
+            --card-bg: #fff;
+            --border-color: #e9ecef;
+            --text-main: #111;
+            --text-muted: #777;
         }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
+            margin: 0;
             display: flex;
-            background-color: #f8f9fa;
+            background-color: var(--page-bg);
+            color: var(--text-main);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
+
         .sidebar {
             width: var(--sidebar-width);
-            background-color: #111;
-            color: #fff;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
             height: 100vh;
             position: fixed;
-            padding: 2rem 1.5rem;
+            inset-inline-start: 0;
+            top: 0;
+            padding: 2rem 1.4rem;
+            border-inline-end: 1px solid #222;
+            display: flex;
+            flex-direction: column;
         }
+
         .sidebar h2 {
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-            margin-bottom: 3rem;
+            font-size: 1rem;
+            letter-spacing: 0.24em;
+            margin: 0 0 2.5rem 0;
             text-align: center;
+            font-weight: 600;
         }
+
         .nav-links {
             list-style: none;
+            padding: 0;
+            margin: 0;
         }
+
         .nav-links li {
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.5rem;
         }
+
         .nav-links a {
-            color: #ccc;
+            color: #bdbdbd;
             text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s;
+            font-size: 0.92rem;
             display: block;
+            padding: 0.7rem 0.9rem;
+            line-height: 1.4;
+            border: 1px solid transparent;
+            transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
         }
-        .nav-links a:hover, .nav-links a.active {
+
+        .nav-links a:hover,
+        .nav-links a.active {
             color: #fff;
+            border-color: #2a2a2a;
+            background-color: #171717;
         }
+
         .main-content {
             margin-right: var(--sidebar-width);
             flex-grow: 1;
-            padding: 3rem;
+            padding: 2.5rem 2.5rem 3rem;
+            min-width: 0;
         }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.7rem;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+        }
+
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
         }
+
         .stat-card {
-            background: #fff;
-            padding: 2rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            text-align: center;
+            background: var(--card-bg);
+            padding: 1.4rem 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
         }
+
         .stat-card h3 {
-            font-size: 0.85rem;
-            color: #777;
+            font-size: 0.78rem;
+            color: var(--text-muted);
             text-transform: uppercase;
-            margin-bottom: 1rem;
-        }
-        .stat-card p {
-            font-size: 2rem;
+            letter-spacing: 0.08em;
+            margin: 0 0 0.75rem 0;
             font-weight: 600;
         }
+
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .section-title {
+            margin: 0 0 1rem 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            background: #fff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            min-width: 700px;
         }
+
         th, td {
             text-align: right;
-            padding: 1.2rem;
-            border-bottom: 1px solid #eee;
+            padding: 1rem 1.1rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
         }
+
         th {
             background-color: #fcfcfc;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #555;
             text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
         }
+
+        tbody tr:hover {
+            background-color: #fafafa;
+        }
+
         .status-badge {
-            padding: 4px 8px;
-            font-size: 0.75rem;
-            border-radius: 4px;
+            display: inline-block;
+            padding: 0.35rem 0.65rem;
+            font-size: 0.74rem;
+            border-radius: 0; /* گوشه تیز */
+            border: 1px solid transparent;
+            line-height: 1;
+            white-space: nowrap;
         }
-        .status-pending { background: #fff3cd; color: #856404; }
-        .status-delivered { background: #d4edda; color: #155724; }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+            border-color: #ffe69c;
+        }
+
+        .status-delivered {
+            background: #d4edda;
+            color: #155724;
+            border-color: #b7dfc0;
+        }
+
+        @media (max-width: 960px) {
+            body {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(100%);
+                transition: transform 0.25s ease;
+                z-index: 50;
+                width: min(280px, 86vw);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-right: 0;
+                padding: 5rem 1rem 1.5rem;
+            }
+
+            .mobile-menu-btn {
+                display: inline-flex;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header h1 {
+                font-size: 1.4rem;
+            }
+
+            .stat-card p {
+                font-size: 1.8rem;
+            }
+
+            th, td {
+                padding: 0.85rem 0.9rem;
+            }
+        }
+
+        /* دکمه منو موبایل */
+        .mobile-topbar {
+            display: none;
+        }
+
+        @media (max-width: 960px) {
+            .mobile-topbar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+                position: fixed;
+                top: 0;
+                inset-inline: 0;
+                z-index: 60;
+                background: rgba(248,249,250,0.96);
+                backdrop-filter: blur(8px);
+                border-bottom: 1px solid var(--border-color);
+                padding: 0.85rem 1rem;
+            }
+
+            .mobile-topbar .title {
+                font-size: 0.95rem;
+                font-weight: 700;
+            }
+
+            .mobile-menu-btn {
+                border: 1px solid #ddd;
+                background: #fff;
+                color: #111;
+                padding: 0.55rem 0.8rem;
+                font-size: 1rem;
+                cursor: pointer;
+                border-radius: 0;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="sidebar">
+
+    <div class="mobile-topbar">
+        <div class="title">APROJECT</div>
+        <button class="mobile-menu-btn" id="menuBtn">☰</button>
+    </div>
+
+    <aside class="sidebar" id="sidebar">
         <h2>APROJECT</h2>
         <ul class="nav-links">
             <li><a href="index.html" class="active">داشبورد</a></li>
@@ -107,10 +292,13 @@
             <li><a href="customers.html">مشتریان</a></li>
             <li><a href="#" id="logoutBtn">خروج</a></li>
         </ul>
-    </div>
+    </aside>
 
-    <div class="main-content">
-        <h1 style="margin-bottom: 2rem;">خلاصه وضعیت</h1>
+    <main class="main-content">
+        <div class="page-header">
+            <h1>خلاصه وضعیت</h1>
+            <p>نمای کلی از آمار اصلی و آخرین سفارش‌ها</p>
+        </div>
 
         <div class="stats-grid">
             <div class="stat-card">
@@ -131,28 +319,37 @@
             </div>
         </div>
 
-        <h2 style="margin-bottom: 1.5rem;">آخرین سفارشات</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>شناسه</th>
-                    <th>مشتری</th>
-                    <th>مبلغ کل</th>
-                    <th>وضعیت</th>
-                    <th>تاریخ</th>
-                </tr>
-            </thead>
-            <tbody id="recentOrdersBody">
-                <!-- Data via JS -->
-            </tbody>
-        </table>
-    </div>
+        <h2 class="section-title">آخرین سفارشات</h2>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>شناسه</th>
+                        <th>مشتری</th>
+                        <th>مبلغ کل</th>
+                        <th>وضعیت</th>
+                        <th>تاریخ</th>
+                    </tr>
+                </thead>
+                <tbody id="recentOrdersBody">
+                    <!-- Data via JS -->
+                </tbody>
+            </table>
+        </div>
+    </main>
 
     <script>
         async function loadStats() {
             try {
                 const res = await fetch('../api/admin/stats.php');
+
+                if (res.status === 401) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
                 const result = await res.json();
+
                 if (result.success) {
                     const data = result.data;
                     document.getElementById('totalCustomers').textContent = data.total_customers;
@@ -170,17 +367,25 @@
                             <td>${new Date(o.created_at).toLocaleDateString('fa-IR')}</td>
                         </tr>
                     `).join('');
-                } else if (response.status === 401) {
-                    window.location.href = 'login.html';
                 }
             } catch (error) {
                 console.error('Error:', error);
             }
         }
 
-        document.getElementById('logoutBtn').addEventListener('click', () => {
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
             fetch('../api/admin/logout.php').then(() => window.location.href = 'login.html');
         });
+
+        const sidebar = document.getElementById('sidebar');
+        const menuBtn = document.getElementById('menuBtn');
+
+        if (menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+            });
+        }
 
         loadStats();
     </script>

@@ -17,7 +17,7 @@ function updateCartCount() {
 
 async function loadProducts() {
   try {
-    const res = await fetch("api/products.php");
+    const res = await fetch("api/product_featured.php");
     const data = await res.json();
 
     if (data.success) {

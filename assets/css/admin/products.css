@@ -1,0 +1,296 @@
+
+        .action-btn {
+            font-size: 0.75rem;
+            padding: 0.35rem 0.7rem;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+
+        .edit-btn {
+            background: #f1f1f1;
+            color: #333;
+        }
+
+        .edit-btn:hover {
+            background: #e2e2e2;
+        }
+
+        .delete-btn {
+            background: #ffe5e5;
+            color: #c40000;
+        }
+
+        .delete-btn:hover {
+            background: #ffcccc;
+        }
+
+        .action-group {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        :root {
+            --sidebar-width: 250px;
+        }
+
+        body {
+            display: flex;
+            background-color: #f8f9fa;
+            margin: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #111;
+            color: #fff;
+            height: 100vh;
+            position: fixed;
+            padding: 2.5rem 1.5rem;
+            box-sizing: border-box;
+        }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-links li {
+            margin-bottom: 1.25rem;
+        }
+
+        .nav-links a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: block;
+            padding: 0.25rem 0;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .nav-links a.active {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Main */
+        .main-content {
+            margin-right: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 3rem;
+            box-sizing: border-box;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.55rem 1.2rem;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: #eaeaea;
+        }
+
+        .btn:hover {
+            background: #ddd;
+        }
+
+        .btn-primary {
+            background: #111;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #000;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+
+        th {
+            font-size: 0.85rem;
+            color: #555;
+            font-weight: 600;
+        }
+
+        th,
+        td {
+            text-align: right;
+            padding: 1.1rem 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .product-img {
+            width: 50px;
+            height: 60px;
+            object-fit: cover;
+        }
+
+        /* action buttons inside table */
+        td button {
+            font-size: 0.75rem;
+            padding: 0.3rem 0.6rem;
+            margin-left: 0.25rem;
+            background: #f0f0f0;
+        }
+
+        td button:hover {
+            background: #e0e0e0;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background: #fff;
+            margin: 3% auto;
+            padding: 2rem;
+            width: 80%;
+            max-width: 600px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 0.85rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+
+        /* Responsive (حداقلی و بدون تغییر ظاهر دسکتاپ) */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-right: 0;
+                padding: 1.5rem;
+            }
+        }
+
+        .modal-content {
+            background: #fff;
+            margin: 4% auto;
+            padding: 2rem 2.2rem;
+            width: 90%;
+            max-width: 520px;
+            border-radius: 6px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.35rem;
+            font-size: 0.82rem;
+            color: #444;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.55rem 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            background: #fff;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #111;
+        }
+
+        /* checkbox group */
+        .form-group input[type="checkbox"] {
+            width: auto;
+            margin-left: 0.4rem;
+            transform: scale(1.1);
+        }
+
+        /* size management */
+        #sizeManagementContainer {
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 0.8rem;
+            background: #fafafa;
+        }
+
+        #sizeManagementContainer div {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .size-stock {
+            width: 70px !important;
+            text-align: center;
+        }
+
+        /* modal buttons */
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.7rem;
+            margin-top: 1.6rem;
+        }
+    

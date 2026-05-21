@@ -97,6 +97,7 @@
                     body: JSON.stringify(data)
                 });
                 const result = await response.json();
+                console.log(result)
                 if (result.success) {
                     window.location.href = 'index.html';
                 } else {

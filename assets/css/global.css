@@ -26,3 +26,6 @@ a {
   text-decoration: none;
   color: #111; /* رنگ متن را هم در صورت نیاز تنظیم کنید */
 }
+*{
+  font-family: "vazir";
+}
