@@ -6,32 +6,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سبد خرید | Aproject</title>
     <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/landing.css">
     <link rel="stylesheet" href="assets/css/cart.css">
-    <script type="module" src="assets/js/cart-page.js"></script>
-
-
 </head>
 
 <body>
 
-    <!-- Header -->
+    <svg style="display: none;">
+        <symbol id="icon-bag" viewBox="0 0 24 24">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </symbol>
+        <symbol id="icon-search" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </symbol>
+        <symbol id="icon-user" viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+        </symbol>
+        <symbol id="icon-menu" viewBox="0 0 24 24">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </symbol>
+    </svg>
+
+    <!-- هدر مینیمال -->
     <header>
-        <div class="header-links">
-            <a href="index.html">بازگشت به فروشگاه</a>
+        <div class="container flex items-center justify-between">
+
+            <button class="mobile-menu-btn" aria-label="منو"><svg class="icon-svg">
+                    <use href="#icon-menu"></use>
+                </svg></button>
+
+            <nav class="main-nav">
+                <a href="index.html">صفحه اصلی</a>
+                <a href="shop.html">فروشگاه</a>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle">دسته‌بندی‌ها</a>
+                    <div class="dropdown-menu" id="categories-dropdown">
+                    </div>
+                </div>
+                <a href="index.html#new-arrivals">جدیدترین‌ها</a>
+            </nav>
+
+            <a href="index.html" class="brand-logo">Aproject</a>
+
+            <div class="header-actions">
+                <a href="shop.html" aria-label="جستجو"><svg class="icon-svg">
+                        <use href="#icon-search"></use>
+                    </svg></a>
+                <a href="admin/login.html" aria-label="حساب کاربری"><svg class="icon-svg">
+                        <use href="#icon-user"></use>
+                    </svg></a>
+                <a href="cart.html" aria-label="کیسه خرید" class="cart-btn">
+                    <svg class="icon-svg">
+                        <use href="#icon-bag"></use>
+                    </svg>
+                    <span class="bag-count">0</span>
+                </a>
+            </div>
         </div>
-        <div class="logo">Aproject</div>
-        <div style="width: 100px;"></div> <!-- Spacer for flex alignment -->
     </header>
 
     <!-- Main Cart Content -->
-    <main class="cart-container">
+    <main class="cart-container container" style="margin-top: 2rem;">
 
-        <h1 class="page-title">سبد خرید <span>(۲ آیتم)</span></h1>
+        <h1 class="page-title">سبد خرید <span id="cartItemCount">(۰ آیتم)</span></h1>
 
         <div class="cart-layout">
 
             <!-- ستون سمت راست: لیست محصولات -->
-            <div class="cart-items">
+            <div class="cart-items" id="cartItemsContainer">
                 <!-- محصولات توسط JS رندر می‌شوند -->
             </div>
 
@@ -40,8 +88,8 @@
                 <h2 class="summary-title">خلاصه سفارش</h2>
 
                 <div class="summary-row">
-                    <span>مبلغ کالاها (۲ آیتم)</span>
-                    <span>۶,۰۰۰,۰۰۰ تومان</span>
+                    <span>مبلغ کالاها</span>
+                    <span id="subtotalPrice">۰ تومان</span>
                 </div>
 
                 <div class="summary-row">
@@ -58,12 +106,12 @@
 
                 <div class="summary-total">
                     <span>جمع کل</span>
-                    <span>۶,۰۰۰,۰۰۰ تومان</span>
+                    <span id="totalPrice">۰ تومان</span>
                 </div>
 
-                <button class="checkout-btn">تکمیل خرید / Checkout</button>
+                <button class="checkout-btn" id="checkoutBtn">تکمیل خرید / Checkout</button>
 
-                <a href="index.html" class="continue-shopping">بازگشت و ادامه خرید</a>
+                <a href="shop.html" class="continue-shopping">بازگشت و ادامه خرید</a>
             </div>
 
         </div>
@@ -91,6 +139,9 @@
             </form>
         </div>
     </div>
+
+    <script type="module" src="assets/js/main.js" defer></script>
+    <script type="module" src="assets/js/cart-page.js" defer></script>
 
 </body>
 

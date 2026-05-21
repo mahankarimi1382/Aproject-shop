@@ -4,27 +4,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پیراهن کتان اورسایز | A project</title>
+    <title>محصول | A project</title>
     <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/landing.css">
     <link rel="stylesheet" href="assets/css/product.css">
 </head>
 
 <body>
 
-    <!-- Header -->
+    <svg style="display: none;">
+        <symbol id="icon-bag" viewBox="0 0 24 24">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </symbol>
+        <symbol id="icon-search" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </symbol>
+        <symbol id="icon-user" viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+        </symbol>
+        <symbol id="icon-menu" viewBox="0 0 24 24">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </symbol>
+    </svg>
+
+    <!-- هدر مینیمال -->
     <header>
-        <div class="header-links">
-            <a href="index.html">فروشگاه</a>
-            <a href="#">کالکشن‌ها</a>
-        </div>
+        <div class="container flex items-center justify-between">
 
-        <div class="logo">Aproject</div>
+            <button class="mobile-menu-btn" aria-label="منو"><svg class="icon-svg">
+                    <use href="#icon-menu"></use>
+                </svg></button>
 
-        <div class="header-links">
-            <a href="cart.html" class="cart-icon">
-                سبد خرید
-                <span class="cart-count">۲</span>
-            </a>
+            <nav class="main-nav">
+                <a href="index.html">صفحه اصلی</a>
+                <a href="shop.html">فروشگاه</a>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle">دسته‌بندی‌ها</a>
+                    <div class="dropdown-menu" id="categories-dropdown">
+                    </div>
+                </div>
+                <a href="index.html#new-arrivals">جدیدترین‌ها</a>
+            </nav>
+
+            <a href="index.html" class="brand-logo">Aproject</a>
+
+            <div class="header-actions">
+                <a href="shop.html" aria-label="جستجو"><svg class="icon-svg">
+                        <use href="#icon-search"></use>
+                    </svg></a>
+                <a href="admin/login.html" aria-label="حساب کاربری"><svg class="icon-svg">
+                        <use href="#icon-user"></use>
+                    </svg></a>
+                <a href="cart.html" aria-label="کیسه خرید" class="cart-btn">
+                    <svg class="icon-svg">
+                        <use href="#icon-bag"></use>
+                    </svg>
+                    <span class="bag-count">0</span>
+                </a>
+            </div>
         </div>
     </header>
 
@@ -33,72 +76,33 @@
 
         <!-- ستون سمت راست: تصاویر محصول -->
         <div class="product-gallery">
-            <!-- تصویر اصلی (وکتور مینیمال) -->
-            <div class="main-image"></div>
+            <div class="main-image">
+                 <img id="productImage" src="" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
 
-            <!-- تصاویر کوچک (تامنیل‌ها) -->
-            <div class="thumbnail-list">
-                <div class="thumbnail active">
-                    <!-- نمای جلو -->
-                    <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="300" height="400" fill="#f4f4f0" />
-                        <path d="M100,60 L200,60 L240,140 L210,140 L210,360 L90,360 L90,140 L60,140 Z" fill="none"
-                            stroke="#333" stroke-width="4" />
-                    </svg>
-                </div>
-                <div class="thumbnail">
-                    <!-- نمای پشت (بدون دکمه) -->
-                    <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="300" height="400" fill="#eaeaea" />
-                        <path d="M100,60 L200,60 L240,140 L210,140 L210,360 L90,360 L90,140 L60,140 Z" fill="none"
-                            stroke="#555" stroke-width="4" />
-                    </svg>
-                </div>
-                <div class="thumbnail">
-                    <!-- نمای نزدیک (زوم روی بافت) -->
-                    <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="300" height="400" fill="#f4f4f0" />
-                        <line x1="0" y1="100" x2="300" y2="100" stroke="#ddd" stroke-width="1" />
-                        <line x1="0" y1="200" x2="300" y2="200" stroke="#ddd" stroke-width="1" />
-                        <line x1="0" y1="300" x2="300" y2="300" stroke="#ddd" stroke-width="1" />
-                        <circle cx="150" cy="200" r="15" fill="#333" />
-                    </svg>
-                </div>
+            <div class="thumbnail-list" id="thumbnailList">
+                <!-- تامنیل‌ها اینجا اضافه می‌شوند -->
             </div>
         </div>
 
         <!-- ستون سمت چپ: جزئیات و خرید -->
         <div class="product-info">
-
-
-
             <h2 class="brand-name">A PROJECT</h2>
-            <h1 class="product-title">پیراهن کتان اورسایز خنثی</h1>
-            <div class="product-price">۲,۸۰۰,۰۰۰ تومان</div>
+            <h1 class="product-title" id="productTitle">در حال بارگذاری...</h1>
+            <div class="product-price" id="productPrice"></div>
 
-            <p class="product-description">
-                طراحی شده با الهام از خطوط معماری مدرن. این پیراهن از کتان ۱۰۰٪ ارگانیک با بافتی متراکم دوخته شده است که
-                علاوه بر ایستایی فوق‌العاده، حس لطافت بی‌نظیری را به پوست منتقل می‌کند. برشی آزاد و اورسایز برای
-                استایل‌های لایه‌لایه (Layering).
+            <p class="product-description" id="productDescription">
             </p>
 
             <!-- انتخاب رنگ -->
             <div class="selector-group">
                 <div class="selector-label">
-                    <span>رنگ: شیری (Ivory)</span>
+                    <span>رنگ:</span>
                 </div>
-                <div class="color-options">
+                <div class="color-options" id="colorOptions">
                     <label>
-                        <input type="radio" name="color" value="ivory" checked>
-                        <span class="color-swatch" style="background-color: #f4f4f0;" title="شیری"></span>
-                    </label>
-                    <label>
-                        <input type="radio" name="color" value="charcoal">
-                        <span class="color-swatch" style="background-color: #333333;" title="زغالی"></span>
-                    </label>
-                    <label>
-                        <input type="radio" name="color" value="sand">
-                        <span class="color-swatch" style="background-color: #d1c7b7;" title="شنی"></span>
+                        <input type="radio" name="color" value="default" checked>
+                        <span class="color-swatch" style="background-color: #f4f4f0;" title="پیش‌فرض"></span>
                     </label>
                 </div>
             </div>
@@ -109,51 +113,31 @@
                     <span>سایز:</span>
                     <span class="size-guide-link">راهنمای سایز</span>
                 </div>
-                <div class="size-options">
-                    <label>
-                        <input type="radio" name="size" value="s">
-                        <div class="size-box">Small</div>
-                    </label>
-                    <label>
-                        <input type="radio" name="size" value="m" checked>
-                        <div class="size-box">Medium</div>
-                    </label>
-                    <label>
-                        <input type="radio" name="size" value="l">
-                        <div class="size-box">Large</div>
-                    </label>
-                    <label>
-                        <!-- این سایز به عنوان ناموجود (disabled) تنظیم شده است -->
-                        <input type="radio" name="size" value="xl" disabled>
-                        <div class="size-box">X-Large</div>
-                    </label>
+                <div class="size-options" id="sizeOptions">
+                    <!-- سایزها توسط JS بارگذاری می‌شوند -->
                 </div>
             </div>
 
             <!-- دکمه افزودن به سبد -->
             <div class="action-row">
-                <div class="quantity-selector" style="display:none;"    >
-                    <button type="button">-</button>
-                    <input type="text" value="1" readonly>
-                    <button type="button">+</button>
+                <div class="quantity-selector">
+                    <button type="button" id="decreaseQty">-</button>
+                    <input type="text" id="quantityInput" value="1" readonly>
+                    <button type="button" id="increaseQty">+</button>
                 </div>
-                <!-- با کلیک روی این دکمه کاربر به صفحه سبد خرید هدایت می‌شود -->
-                <button class="add-to-cart-btn">
+                <button class="add-to-cart-btn" id="addToCartBtn">
                     افزودن به سبد خرید
                 </button>
             </div>
 
-            <!-- آکاردئون‌های اطلاعات تکمیلی (بدون نیاز به JS) -->
             <div class="product-accordions">
                 <details open>
                     <summary>جزئیات و نگهداری</summary>
                     <div class="details-content">
-                        <ul>
-                            <li>جنس: ۱۰۰٪ کتان ارگانیک ترک</li>
-                            <li>طراحی اورسایز با سرشانه‌های افتاده</li>
-                            <li>شستشو با ماشین لباسشویی در دمای ۳۰ درجه</li>
-                            <li>از مایع سفیدکننده استفاده نشود</li>
-                            <li>اتوکشی با دمای متوسط</li>
+                        <ul id="productDetails">
+                            <li>جنس: با کیفیت برتر</li>
+                            <li>طراحی مدرن و مینیمال</li>
+                            <li>شستشو با دقت</li>
                         </ul>
                     </div>
                 </details>
@@ -161,17 +145,17 @@
                 <details>
                     <summary>ارسال و بازگشت کالا</summary>
                     <div class="details-content">
-                        <p>ارسال استاندارد برای تمامی سفارشات بالای ۵ میلیون تومان رایگان است. تحویل در تهران طی ۲۴ ساعت
-                            و در شهرستان‌ها بین ۲ تا ۴ روز کاری انجام می‌شود.</p>
-                        <p>شما می‌توانید تا ۷ روز پس از دریافت کالا، در صورت عدم استفاده و جدا نشدن تگ‌ها، آن را
-                            بازگردانید.</p>
+                        <p>ارسال استاندارد برای تمامی سفارشات انجام می‌شود. تحویل در سریع‌ترین زمان ممکن.</p>
+                        <p>شما می‌توانید تا ۷ روز پس از دریافت کالا، آن را بازگردانید.</p>
                     </div>
                 </details>
             </div>
 
         </div>
     </main>
-    <script type="module" src="assets/js/product-page.js"></script>
+
+    <script type="module" src="assets/js/main.js" defer></script>
+    <script type="module" src="assets/js/product-page.js" defer></script>
 
 </body>
 
