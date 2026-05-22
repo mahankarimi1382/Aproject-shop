@@ -23,12 +23,15 @@ async function fetchProduct(id) {
     return null;
 }
 
+let selectedSize = null;
+
 function renderProduct(product) {
     const titleEl = document.querySelector(".product-title");
     const priceEl = document.querySelector(".product-price");
     const imageEl = document.getElementById("productImage");
     const descEl = document.getElementById("productDescription");
     const detailsEl = document.getElementById("productDetails");
+    const sizeOptionsEl = document.getElementById("sizeOptions");
 
     if (titleEl) titleEl.textContent = product.name;
     if (priceEl) priceEl.textContent = formatPrice(product.price) + " تومان";
@@ -48,31 +51,61 @@ function renderProduct(product) {
             <li>اتوکشی با دمای متوسط</li>
         `;
     }
+
+    if (sizeOptionsEl && product.sizes) {
+        sizeOptionsEl.innerHTML = product.sizes.map((s, index) => `
+            <label>
+                <input type="radio" name="size" value="${s.size_name}" ${s.stock === 0 ? 'disabled' : ''} ${!selectedSize && s.stock > 0 ? '' : (selectedSize === s.size_name ? 'checked' : '')}>
+                <span class="size-box">${s.size_name}</span>
+            </label>
+        `).join("");
+
+        // Set initial selectedSize if not set
+        const availableSize = product.sizes.find(s => s.stock > 0);
+        if (!selectedSize && availableSize) {
+            selectedSize = availableSize.size_name;
+            const input = sizeOptionsEl.querySelector(`input[value="${selectedSize}"]`);
+            if (input) input.checked = true;
+        }
+
+        sizeOptionsEl.querySelectorAll('input[name="size"]').forEach(input => {
+            input.addEventListener('change', (e) => {
+                selectedSize = e.target.value;
+                checkProductInCart(product.id);
+            });
+        });
+    }
+
     document.title = product.name + " | Aproject";
 }
 
-function addToCart(productId, qty) {
+function addToCart(productId, qty, size) {
+    if (!size) {
+        alert("لطفا ابتدا سایز مورد نظر خود را انتخاب کنید.");
+        return;
+    }
     let cart = getCart();
-    const existing = cart.find(item => item.id == productId);
+    const existing = cart.find(item => item.id == productId && item.size == size);
 
     if (existing) {
         existing.quantity += qty;
     } else {
         cart.push({
             id: Number(productId),
-            quantity: qty
+            quantity: qty,
+            size: size
         });
     }
     saveCart(cart);
 }
 
-function updateCartItemQty(productId, qty) {
+function updateCartItemQty(productId, qty, size) {
     let cart = getCart();
-    const item = cart.find(item => item.id == productId);
+    const item = cart.find(item => item.id == productId && item.size == size);
     if (item) {
         item.quantity = qty;
         if (item.quantity <= 0) {
-            cart = cart.filter(i => i.id != productId);
+            cart = cart.filter(i => !(i.id == productId && i.size == size));
         }
         saveCart(cart);
         updateCartCount();
@@ -87,7 +120,7 @@ function setupAddToCart(productId) {
     btn.addEventListener("click", () => {
         const qtyInput = document.getElementById("quantityInput");
         const qty = Number(qtyInput ? qtyInput.value : 1);
-        addToCart(productId, qty);
+        addToCart(productId, qty, selectedSize);
         updateCartCount();
         checkProductInCart(productId);
     });
@@ -101,23 +134,23 @@ function setupAddToCart(productId) {
             let qty = Number(qtyInput.value);
             if (qty > 1) {
                 qty--;
-                updateCartItemQty(productId, qty);
+                updateCartItemQty(productId, qty, selectedSize);
             } else {
-                updateCartItemQty(productId, 0);
+                updateCartItemQty(productId, 0, selectedSize);
             }
         });
 
         increaseBtn.addEventListener("click", () => {
             let qty = Number(qtyInput.value);
             qty++;
-            updateCartItemQty(productId, qty);
+            updateCartItemQty(productId, qty, selectedSize);
         });
     }
 }
 
 function checkProductInCart(productId) {
     const cart = getCart();
-    const existing = cart.find(item => item.id == productId);
+    const existing = cart.find(item => item.id == productId && item.size == selectedSize);
 
     const qtySelector = document.querySelector(".quantity-selector");
     const addBtn = document.getElementById("addToCartBtn");
