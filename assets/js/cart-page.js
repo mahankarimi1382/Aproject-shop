@@ -39,17 +39,17 @@ function renderCartItems(products, cart) {
         return;
     }
 
-    products.forEach((product) => {
-        const itemInCart = cart.find((c) => Number(c.id) === Number(product.id));
-        const quantity = itemInCart ? itemInCart.quantity : 0;
-        if (quantity === 0) return;
+    cart.forEach((itemInCart) => {
+        const product = products.find((p) => Number(p.id) === Number(itemInCart.id));
+        if (!product) return;
 
+        const quantity = itemInCart.quantity;
         const itemTotal = product.price * quantity;
         totalPrice += itemTotal;
         totalItems += quantity;
 
         cartItemsContainer.innerHTML += `
-      <div class="cart-item" data-id="${product.id}">
+      <div class="cart-item" data-id="${product.id}" data-size="${itemInCart.size}">
         <div class="item-image">
           <img src="${product.image}" alt="${product.name}" />
         </div>
@@ -62,15 +62,15 @@ function renderCartItems(products, cart) {
 
           <div class="item-controls">
             <div class="quantity-selector">
-              <button class="minus-btn" data-id="${product.id}">-</button>
+              <button class="minus-btn" data-id="${product.id}" data-size="${itemInCart.size}">-</button>
               <span>${quantity}</span>
-              <button class="plus-btn" data-id="${product.id}">+</button>
+              <button class="plus-btn" data-id="${product.id}" data-size="${itemInCart.size}">+</button>
             </div>
             <div class="item-price">${formatPrice(itemTotal)} تومان</div>
           </div>
         </div>
 
-        <button class="remove-btn" data-id="${product.id}" aria-label="حذف آیتم">
+        <button class="remove-btn" data-id="${product.id}" data-size="${itemInCart.size}" aria-label="حذف آیتم">
           <svg class="trash-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 6h18" />
             <path d="M8 6V4h8v2" />
@@ -92,31 +92,31 @@ function renderCartItems(products, cart) {
 
 function attachEventListeners() {
     document.querySelectorAll(".minus-btn").forEach((btn) => {
-        btn.addEventListener("click", () => changeQuantity(btn.dataset.id, -1));
+        btn.addEventListener("click", () => changeQuantity(btn.dataset.id, btn.dataset.size, -1));
     });
     document.querySelectorAll(".plus-btn").forEach((btn) => {
-        btn.addEventListener("click", () => changeQuantity(btn.dataset.id, 1));
+        btn.addEventListener("click", () => changeQuantity(btn.dataset.id, btn.dataset.size, 1));
     });
     document.querySelectorAll(".remove-btn").forEach((btn) => {
-        btn.addEventListener("click", () => removeItem(btn.dataset.id));
+        btn.addEventListener("click", () => removeItem(btn.dataset.id, btn.dataset.size));
     });
 }
 
-function changeQuantity(id, delta) {
+function changeQuantity(id, size, delta) {
     let cart = getCart();
-    const item = cart.find((i) => i.id == id);
+    const item = cart.find((i) => i.id == id && i.size == size);
 
     if (!item) return;
     item.quantity += delta;
-    if (item.quantity < 1) cart = cart.filter((i) => i.id != id);
+    if (item.quantity < 1) cart = cart.filter((i) => !(i.id == id && i.size == size));
 
     saveCart(cart);
     updateCartCount();
     initCartPage();
 }
 
-function removeItem(id) {
-    let cart = getCart().filter((i) => i.id != id);
+function removeItem(id, size) {
+    let cart = getCart().filter((i) => !(i.id == id && i.size == size));
     saveCart(cart);
     updateCartCount();
     initCartPage();
