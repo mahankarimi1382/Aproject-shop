@@ -52,17 +52,23 @@ function renderProduct(product) {
         `;
     }
 
-    if (sizeOptionsEl && product.sizes) {
+    const sizeSelectorGroup = sizeOptionsEl ? sizeOptionsEl.closest('.selector-group') : null;
+
+    if (sizeOptionsEl && product.sizes && product.sizes.length > 0) {
+        if (sizeSelectorGroup) sizeSelectorGroup.style.display = "block";
+
         sizeOptionsEl.innerHTML = product.sizes.map((s, index) => `
             <label>
-                <input type="radio" name="size" value="${s.size_name}" ${s.stock === 0 ? 'disabled' : ''} ${!selectedSize && s.stock > 0 ? '' : (selectedSize === s.size_name ? 'checked' : '')}>
+                <input type="radio" name="size" value="${s.size_name}" ${s.stock === 0 ? 'disabled' : ''} ${selectedSize === s.size_name ? 'checked' : ''}>
                 <span class="size-box">${s.size_name}</span>
             </label>
         `).join("");
 
-        // Set initial selectedSize if not set
+        // Set initial selectedSize if not set or if current selectedSize is not available for this product
         const availableSize = product.sizes.find(s => s.stock > 0);
-        if (!selectedSize && availableSize) {
+        const currentSizeValid = product.sizes.find(s => s.size_name === selectedSize && s.stock > 0);
+
+        if (!currentSizeValid && availableSize) {
             selectedSize = availableSize.size_name;
             const input = sizeOptionsEl.querySelector(`input[value="${selectedSize}"]`);
             if (input) input.checked = true;
@@ -74,6 +80,9 @@ function renderProduct(product) {
                 checkProductInCart(product.id);
             });
         });
+    } else {
+        if (sizeSelectorGroup) sizeSelectorGroup.style.display = "none";
+        selectedSize = "Free Size"; // Default fallback if no sizes specified
     }
 
     document.title = product.name + " | Aproject";
