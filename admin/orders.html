@@ -52,7 +52,7 @@
             <li><a href="products.html">محصولات</a></li>
             <li><a href="orders.html" class="active">سفارشات</a></li>
             <li><a href="customers.html">مشتریان</a></li>
-            <li><a href="#" id="logoutBtn">خروج</a></li>
+            <li><a href="/" id="logoutBtn">خروج</a></li>
         </ul>
     </div>
 
@@ -160,6 +160,11 @@
         }
 
         loadOrders();
+                document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            fetch('../api/admin/logout.php').then(() => window.location.href = 'login.html');
+        });
+
     </script>
 </body>
 </html>

@@ -33,7 +33,7 @@ try {
         $products = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         // Fetch sizes for these products
-        $sqlSizes = "SELECT * FROM product_sizes WHERE product_id IN ($placeholders) AND is_enabled = 1";
+        $sqlSizes = "SELECT * FROM product_sizes WHERE product_id IN ($placeholders) AND is_enabled = 1 ORDER BY id ASC";
         $stmtSizes = mysqli_prepare($conn, $sqlSizes);
         if ($stmtSizes) {
             mysqli_stmt_bind_param($stmtSizes, $types, ...$cleanIds);

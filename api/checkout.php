@@ -42,15 +42,23 @@ try {
     mysqli_stmt_execute($orderStmt);
     $orderId = mysqli_insert_id($conn);
 
-    // 3. Add Order Items
+    // 3. Add Order Items and Update Stock
     $itemStmt = mysqli_prepare($conn, "INSERT INTO order_items (order_id, product_id, size, quantity, price) VALUES (?, ?, ?, ?, ?)");
+    $stockStmt = mysqli_prepare($conn, "UPDATE product_sizes SET stock = stock - ? WHERE product_id = ? AND size_name = ?");
+    
     foreach ($items as $item) {
+        // Add to order_items
         mysqli_stmt_bind_param($itemStmt, "iisid", $orderId, $item['id'], $item['size'], $item['quantity'], $item['price']);
         mysqli_stmt_execute($itemStmt);
 
-        // Optional: Reduce stock in product_sizes or products table
-        // For simplicity, we just reduce from products table here if you want
-        // mysqli_query($conn, "UPDATE products SET stock = stock - {$item['quantity']} WHERE id = {$item['id']}");
+        // Update product_sizes stock
+        mysqli_stmt_bind_param($stockStmt, "iis", $item['quantity'], $item['id'], $item['size']);
+        mysqli_stmt_execute($stockStmt);
+        
+        // Also update main products table stock if needed (total stock)
+        $updateTotalStock = mysqli_prepare($conn, "UPDATE products SET stock = stock - ? WHERE id = ?");
+        mysqli_stmt_bind_param($updateTotalStock, "ii", $item['quantity'], $item['id']);
+        mysqli_stmt_execute($updateTotalStock);
     }
 
     mysqli_commit($conn);
