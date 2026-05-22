@@ -155,7 +155,6 @@ header {
 
 .main-nav a {
   position: relative;
-  padding-bottom: 5px;
 }
 
 .main-nav a::after {

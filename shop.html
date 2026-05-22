@@ -6,74 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>فروشگاه | A PROJECT</title>
     <link rel="stylesheet" href="assets/css/global.css">
-    <link rel="stylesheet" href="assets/css/landing.css">
     <link rel="stylesheet" href="assets/css/shop.css">
 </head>
 
 <body>
 
-    <svg style="display: none;">
-        <symbol id="icon-bag" viewBox="0 0 24 24">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <path d="M16 10a4 4 0 0 1-8 0"></path>
-        </symbol>
-        <symbol id="icon-search" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </symbol>
-        <symbol id="icon-user" viewBox="0 0 24 24">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-        </symbol>
-        <symbol id="icon-menu" viewBox="0 0 24 24">
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-        </symbol>
-    </svg>
-
-    <!-- هدر مینیمال -->
+    <!-- Header (مشابه سایر صفحات) -->
+    <!-- Header -->
     <header>
-        <div class="container flex items-center justify-between">
+        <div class="header-links">
+            <a href="index.html">فروشگاه</a>
+            <a href="#">کالکشن‌ها</a>
+        </div>
 
-            <button class="mobile-menu-btn" aria-label="منو"><svg class="icon-svg">
-                    <use href="#icon-menu"></use>
-                </svg></button>
+        <div class="logo">Aproject</div>
 
-            <nav class="main-nav">
-                <a href="index.html">صفحه اصلی</a>
-                <a href="shop.html">فروشگاه</a>
-                <div class="dropdown">
-                    <a href="#" class="dropdown-toggle">دسته‌بندی‌ها</a>
-                    <div class="dropdown-menu" id="categories-dropdown">
-                    </div>
-                </div>
-                <a href="index.html#new-arrivals">جدیدترین‌ها</a>
-            </nav>
-
-            <a href="index.html" class="brand-logo">Aproject</a>
-
-            <div class="header-actions">
-                <a href="shop.html" aria-label="جستجو"><svg class="icon-svg">
-                        <use href="#icon-search"></use>
-                    </svg></a>
-                <a href="admin/login.html" aria-label="حساب کاربری"><svg class="icon-svg">
-                        <use href="#icon-user"></use>
-                    </svg></a>
-                <a href="cart.html" aria-label="کیسه خرید" class="cart-btn">
-                    <svg class="icon-svg">
-                        <use href="#icon-bag"></use>
-                    </svg>
-                    <span class="bag-count">0</span>
-                </a>
-            </div>
+        <div class="header-links">
+            <a href="cart.html" class="cart-icon">
+                سبد خرید
+                <span class="cart-count">۲</span>
+            </a>
         </div>
     </header>
 
 
     <!-- صفحه فروشگاه -->
-    <main class="shop-layout container" style="margin-top: 2rem;">
+    <main class="shop-layout">
         
         <!-- سایدبار فیلتر و جستجو -->
         <aside class="shop-sidebar">
@@ -87,32 +45,70 @@
                 </button>
             </div>
 
-            <div class="filter-group">
-                <h3 class="filter-title">دسته‌بندی‌ها</h3>
-                <ul class="filter-list" id="categoryFilter">
-                    <li><label><input type="radio" name="category" value="0" checked> همه</label></li>
-                    <!-- دسته‌بندی‌ها توسط JS بارگذاری می‌شوند -->
-                </ul>
-            </div>
+
 
             <div class="filter-group">
                 <h3 class="filter-title">مرتب‌سازی</h3>
                 <ul class="filter-list" id="sortFilter">
                     <li><label><input type="radio" name="sort" value="newest" checked> جدیدترین</label></li>
-                    <li><label><input type="radio" name="sort" value="price_asc"> ارزان‌ترین</label></li>
-                    <li><label><input type="radio" name="sort" value="price_desc"> گران‌ترین</label></li>
+                    <li><label><input type="radio" name="sort" value="price-asc"> ارزان‌ترین</label></li>
+                    <li><label><input type="radio" name="sort" value="price-desc"> گران‌ترین</label></li>
                 </ul>
             </div>
         </aside>
 
         <!-- گرید محصولات -->
         <section class="products-grid" id="productsContainer">
-            <!-- محصولات توسط JS رندر می‌شوند -->
+            
+            <!-- نمونه کارت محصول (برای حالت آفلاین) -->
+            <!-- در اتصال به بک‌اند، این بخش توسط JS تولید می‌شود -->
+            <a href="product.html?id=1" class="product-card">
+                <div class="product-image">
+                    <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="300" height="400" fill="#f4f4f0" />
+                        <path d="M100,60 L200,60 L240,140 L210,140 L210,360 L90,360 L90,140 L60,140 Z" fill="none" stroke="#333" stroke-width="2" />
+                    </svg>
+                </div>
+                <div class="product-info">
+                    <h2 class="product-title">پیراهن کتان اورسایز خنثی</h2>
+                    <span class="product-price">۲,۸۰۰,۰۰۰ تومان</span>
+                </div>
+            </a>
+
+            <a href="product.html?id=2" class="product-card">
+                <div class="product-image">
+                    <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="300" height="400" fill="#eaeaea" />
+                        <path d="M120,50 L180,50 L200,100 L180,350 L120,350 L100,100 Z" fill="none" stroke="#111" stroke-width="2" />
+                    </svg>
+                </div>
+                <div class="product-info">
+                    <h2 class="product-title">شلوار پارچه‌ای راسته</h2>
+                    <span class="product-price">۳,۲۰۰,۰۰۰ تومان</span>
+                </div>
+            </a>
+
+            <a href="product.html?id=3" class="product-card">
+                <div class="product-image">
+                    <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="300" height="400" fill="#fcfcfc" />
+                        <circle cx="150" cy="200" r="80" fill="none" stroke="#555" stroke-width="2" />
+                        <line x1="150" y1="120" x2="150" y2="280" stroke="#555" stroke-width="2" />
+                    </svg>
+                </div>
+                <div class="product-info">
+                    <h2 class="product-title">تی‌شرت بیسیک پنبه‌ای</h2>
+                    <span class="product-price">۹۵۰,۰۰۰ تومان</span>
+                </div>
+            </a>
+
         </section>
 
     </main>
 
-    <script type="module" src="assets/js/main.js" defer></script>
-    <script type="module" src="assets/js/shop-page.js" defer></script>
+    <!-- اسکریپت‌های صفحه -->
+    <script type="module" src="assets/js/shop-page.js"></script>
+        <script type="module" src="assets/js/main.js" defer></script>
+
 </body>
 </html>

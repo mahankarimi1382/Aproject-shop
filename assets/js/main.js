@@ -19,11 +19,13 @@ export async function loadCategories() {
         const data = await res.json();
         if (data.success) {
             renderCategories(data.data);
+            document.dispatchEvent(new Event("categoriesLoaded"));
         }
     } catch (error) {
         console.error("Error loading categories:", error);
     }
 }
+
 
 function renderCategories(categories) {
     const dropdown = document.getElementById("categories-dropdown");

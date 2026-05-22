@@ -55,3 +55,32 @@ function renderProducts(products) {
 document.addEventListener("DOMContentLoaded", () => {
     loadFeaturedProducts();
 });
+// Mobile dropdown accordion
+// Mobile dropdown accordion
+const dropdown = document.querySelector(".dropdown");
+const dropdownToggle = document.querySelector(".dropdown-toggle");
+
+// باز/بسته شدن منو در موبایل
+if (dropdownToggle) {
+    dropdownToggle.addEventListener("click", (e) => {
+        if (window.innerWidth <= 768) {
+            e.preventDefault();
+            e.stopPropagation();
+            dropdown.classList.toggle("open");
+        }
+    });
+}
+
+// وقتی دسته‌بندی‌ها از سرور لود شدند، لینک‌ها ساخته می‌شوند
+// پس باید اینجا دوباره آنها را انتخاب کنیم و event اضافه کنیم:
+
+document.addEventListener("categoriesLoaded", () => {
+    const dropdownMenuLinks = document.querySelectorAll("#categories-dropdown a");
+
+    dropdownMenuLinks.forEach(link => {
+        link.addEventListener("click", (e) => {
+            e.stopPropagation();  // جلوگیری از بسته شدن منو
+            // اینجا لینک به طور طبیعی کار می‌کند
+        });
+    });
+});
