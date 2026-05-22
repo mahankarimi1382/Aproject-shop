@@ -32,6 +32,31 @@ try {
         $result = mysqli_stmt_get_result($stmt);
         $products = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
+        // Fetch sizes for these products
+        $sqlSizes = "SELECT * FROM product_sizes WHERE product_id IN ($placeholders) AND is_enabled = 1";
+        $stmtSizes = mysqli_prepare($conn, $sqlSizes);
+        if ($stmtSizes) {
+            mysqli_stmt_bind_param($stmtSizes, $types, ...$cleanIds);
+            mysqli_stmt_execute($stmtSizes);
+            $resultSizes = mysqli_stmt_get_result($stmtSizes);
+            $allSizes = mysqli_fetch_all($resultSizes, MYSQLI_ASSOC);
+
+            // Group sizes by product_id
+            $sizesByProduct = [];
+            foreach ($allSizes as $size) {
+                $sizesByProduct[$size['product_id']][] = [
+                    'id' => $size['id'],
+                    'size_name' => $size['size_name'],
+                    'stock' => (int)$size['stock']
+                ];
+            }
+
+            // Attach sizes to products
+            foreach ($products as &$product) {
+                $product['sizes'] = isset($sizesByProduct[$product['id']]) ? $sizesByProduct[$product['id']] : [];
+            }
+        }
+
         echo json_encode([
             "success" => true,
             "data" => $products
