@@ -286,12 +286,19 @@ document.getElementById("productForm").onsubmit = async (e) => {
   const imageFile = document.getElementById("productImage").files[0];
   if (imageFile) formData.append("image", imageFile);
 
-  const res = await fetch("../api/admin/products.php", { method: "POST", body: formData });
-  const result = await res.json();
+  try {
+      const res = await fetch("../api/admin/products.php", { method: "POST", body: formData });
+      const result = await res.json();
 
-  if (result.success) {
-    closeModal();
-    loadData();
+      if (result.success) {
+        closeModal();
+        loadData();
+      } else {
+        alert("خطا در ذخیره محصول: " + (result.message || "خطای ناشناخته"));
+      }
+  } catch (error) {
+      console.error("Save Product Error:", error);
+      alert("خطا در برقراری ارتباط با سرور.");
   }
 };
 

@@ -215,13 +215,21 @@ mysqli_stmt_bind_param($stmt,"sdiiii",$name,$price,$stock,$category_id,$is_featu
 
 else{
 
+if($imagePath){
 $stmt=mysqli_prepare($conn,"
 INSERT INTO products
 (name,price,image,stock,category_id,is_featured)
 VALUES (?,?,?,?,?,?)
 ");
-
 mysqli_stmt_bind_param($stmt,"sdsiii",$name,$price,$imagePath,$stock,$category_id,$is_featured);
+}else{
+$stmt=mysqli_prepare($conn,"
+INSERT INTO products
+(name,price,stock,category_id,is_featured)
+VALUES (?,?,?,?,?)
+");
+mysqli_stmt_bind_param($stmt,"sdiii",$name,$price,$stock,$category_id,$is_featured);
+}
 
 }
 
@@ -248,8 +256,9 @@ foreach($sizes as $size){
 
 $stockVal=intval($size['stock']);
 $enabledVal=intval($size['is_enabled']);
+$sizeName=$size['size_name'];
 
-mysqli_stmt_bind_param($sizeStmt,"isii",$productId,$size['size_name'],$stockVal,$enabledVal);
+mysqli_stmt_bind_param($sizeStmt,"isii",$productId,$sizeName,$stockVal,$enabledVal);
 
 mysqli_stmt_execute($sizeStmt);
 

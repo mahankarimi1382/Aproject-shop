@@ -55,6 +55,24 @@ function renderProducts(products) {
 document.addEventListener("DOMContentLoaded", () => {
     loadFeaturedProducts();
 });
+
+document.addEventListener("categoriesLoaded", () => {
+    const collectionItems = document.querySelectorAll(".collection-item[data-category-name]");
+    const dropdownLinks = document.querySelectorAll("#categories-dropdown a");
+
+    collectionItems.forEach(item => {
+        const targetName = item.getAttribute("data-category-name").trim();
+
+        // Find matching category in dropdown links
+        for (const link of dropdownLinks) {
+            if (link.textContent.trim() === targetName) {
+                item.href = link.href;
+                break;
+            }
+        }
+    });
+});
+
 // Mobile dropdown accordion
 // Mobile dropdown accordion
 const dropdown = document.querySelector(".dropdown");
