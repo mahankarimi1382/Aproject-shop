@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیریت سایزها | Aproject Admin</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/admin/products.css">
+    <style>
+        .status-badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .status-enabled {
+            background: #dff0d8;
+            color: #3c763d;
+        }
+
+        .status-disabled {
+            background: #f2dede;
+            color: #a94442;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h2>APROJECT</h2>
+        <ul class="nav-links">
+            <li><a href="index.html">داشبورد</a></li>
+            <li><a href="categories.html">دسته‌بندی‌ها</a></li>
+            <li><a href="sizes.html" class="active">سایزها</a></li>
+            <li><a href="products.html">محصولات</a></li>
+            <li><a href="orders.html">سفارشات</a></li>
+            <li><a href="customers.html">مشتریان</a></li>
+            <li><a href="/" id="logoutBtn">خروج</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="header-row">
+            <h1>مدیریت سایزها</h1>
+            <button class="btn btn-primary" id="addSizeBtn">افزودن سایز جدید</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>شناسه</th>
+                    <th>نام سایز</th>
+                    <th>دسته‌بندی</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody id="sizesTableBody">
+                <!-- Data loaded via JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal -->
+    <div id="sizeModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">افزودن سایز</h2>
+            <form id="sizeForm">
+                <input type="hidden" id="sizeId">
+                <div class="form-group">
+                    <label>نام سایز</label>
+                    <input type="text" id="sizeName" required placeholder="مثلاً S, M, XL, Large...">
+                </div>
+                <div class="form-group">
+                    <label>دسته‌بندی</label>
+                    <select id="sizeCategory" required></select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="sizeEnabled" checked>
+                        فعال (نمایش در سایت)
+                    </label>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary">ذخیره</button>
+                    <button type="button" class="btn" onclick="closeModal()">انصراف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let categories = [];
+
+        async function loadCategories() {
+            const res = await fetch("../api/admin/categories.php");
+            const data = await res.json();
+            categories = data.data;
+            const select = document.getElementById("sizeCategory");
+            select.innerHTML = '<option value="">انتخاب دسته‌بندی...</option>' +
+                categories.map(c => `<option value="${c.id}">${c.name}</option>`).join("");
+        }
+
+        async function loadSizes() {
+            const res = await fetch("../api/admin/sizes.php");
+            const data = await res.json();
+            const body = document.getElementById("sizesTableBody");
+            if (data.success) {
+                body.innerHTML = data.data.map(s => `
+                    <tr>
+                        <td>${s.id}</td>
+                        <td>${s.size_name}</td>
+                        <td>${s.category_name}</td>
+                        <td>
+                            <span class="status-badge ${s.is_enabled ? 'status-enabled' : 'status-disabled'}">
+                                ${s.is_enabled ? 'فعال' : 'غیرفعال'}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="action-btn edit-btn" onclick="editSize(${s.id}, '${s.size_name}', ${s.category_id}, ${s.is_enabled})">ویرایش</button>
+                            <button class="action-btn delete-btn" onclick="deleteSize(${s.id})">حذف</button>
+                        </td>
+                    </tr>
+                `).join("");
+            }
+        }
+
+        const modal = document.getElementById("sizeModal");
+        const form = document.getElementById("sizeForm");
+
+        document.getElementById("addSizeBtn").onclick = () => {
+            form.reset();
+            document.getElementById("sizeId").value = "";
+            document.getElementById("modalTitle").textContent = "افزودن سایز";
+            document.getElementById("sizeEnabled").checked = true;
+            modal.style.display = "block";
+        };
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = (e) => { if (e.target === modal) closeModal(); };
+
+        function editSize(id, name, catId, enabled) {
+            document.getElementById("sizeId").value = id;
+            document.getElementById("sizeName").value = name;
+            document.getElementById("sizeCategory").value = catId;
+            document.getElementById("sizeEnabled").checked = !!enabled;
+            document.getElementById("modalTitle").textContent = "ویرایش سایز";
+            modal.style.display = "block";
+        }
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const payload = {
+                id: document.getElementById("sizeId").value,
+                size_name: document.getElementById("sizeName").value,
+                category_id: document.getElementById("sizeCategory").value,
+                is_enabled: document.getElementById("sizeEnabled").checked ? 1 : 0
+            };
+
+            const res = await fetch("../api/admin/sizes.php", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+            const result = await res.json();
+            if (result.success) {
+                closeModal();
+                loadSizes();
+            } else {
+                alert("خطا در ذخیره: " + result.message);
+            }
+        };
+
+        async function deleteSize(id) {
+            if (confirm("آیا از حذف این سایز مطمئن هستید؟")) {
+                await fetch(`../api/admin/sizes.php?id=${id}`, { method: "DELETE" });
+                loadSizes();
+            }
+        }
+
+        document.getElementById('logoutBtn').onclick = (e) => {
+            e.preventDefault();
+            fetch('../api/admin/logout.php').then(() => window.location.href = 'login.html');
+        };
+
+        loadCategories();
+        loadSizes();
+    </script>
+</body>
+
+</html>

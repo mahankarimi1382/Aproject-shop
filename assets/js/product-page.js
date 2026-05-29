@@ -43,7 +43,6 @@ function renderProduct(product) {
         descEl.textContent = product.description || "طراحی شده با الهام از خطوط معماری مدرن. این محصول از مواد با کیفیت برتر دوخته شده است که علاوه بر ایستایی فوق‌العاده، حس لطافت بی‌نظیری را به پوست منتقل می‌کند.";
     }
     if (detailsEl) {
-        // Fallback details if product.details is not in DB
         detailsEl.innerHTML = product.details ? product.details : `
             <li>جنس: با کیفیت برتر</li>
             <li>طراحی مدرن و مینیمال</li>
@@ -59,17 +58,14 @@ function renderProduct(product) {
         
         sizeOptionsEl.innerHTML = product.sizes.map((s, index) => `
             <label>
-                <input type="radio" name="size" value="${s.size_name}" ${s.stock === 0 ? 'disabled' : ''} ${selectedSize === s.size_name ? 'checked' : ''}>
+                <input type="radio" name="size" value="${s.size_name}" ${selectedSize === s.size_name ? 'checked' : ''}>
                 <span class="size-box">${s.size_name}</span>
             </label>
         `).join("");
 
-        // Set initial selectedSize if not set or if current selectedSize is not available for this product
-        const availableSize = product.sizes.find(s => s.stock > 0);
-        const currentSizeValid = product.sizes.find(s => s.size_name === selectedSize && s.stock > 0);
-
-        if (!currentSizeValid && availableSize) {
-            selectedSize = availableSize.size_name;
+        // Set initial selectedSize if not set
+        if (!selectedSize || !product.sizes.find(s => s.size_name === selectedSize)) {
+            selectedSize = product.sizes[0].size_name;
             const input = sizeOptionsEl.querySelector(`input[value="${selectedSize}"]`);
             if (input) input.checked = true;
         }
