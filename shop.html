@@ -6,26 +6,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>فروشگاه | A PROJECT</title>
     <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/landing.css">
     <link rel="stylesheet" href="assets/css/shop.css">
 </head>
 
 <body>
 
-    <!-- Header (مشابه سایر صفحات) -->
-    <!-- Header -->
+    <!-- مخزن آیکون‌های مینیمال (Thin Lines) کاملاً آفلاین -->
+    <svg style="display: none;">
+        <!-- آیکون کیسه خرید به جای سبد خرید چرخ‌دار (مناسب مزون) -->
+
+        <symbol id="icon-bag" viewBox="0 0 24 24">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </symbol>
+        <!-- آیکون جستجوی ظریف -->
+        <symbol id="icon-search" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </symbol>
+        <!-- آیکون کاربر (حساب کاربری) -->
+        <symbol id="icon-user" viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+        </symbol>
+        <!-- منوی همبرگری ظریف -->
+        <symbol id="icon-menu" viewBox="0 0 24 24">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </symbol>
+    </svg>
+
+    <!-- هدر مینیمال -->
     <header>
-        <div class="header-links">
-            <a href="index.html">فروشگاه</a>
-            <a href="#">کالکشن‌ها</a>
-        </div>
+        <div class="container flex items-center justify-between">
 
-        <div class="logo">Aproject</div>
+            <!-- دکمه منو موبایل (فقط در سایز کوچک نمایش داده می‌شود) -->
+            <button class="mobile-menu-btn" aria-label="منو"><svg class="icon-svg">
+                    <use href="#icon-menu"></use>
+                </svg></button>
 
-        <div class="header-links">
-            <a href="cart.html" class="cart-icon">
-                سبد خرید
-                <span class="cart-count">۲</span>
-            </a>
+            <!-- منوی اصلی (ناوبری متنی) -->
+            <nav class="main-nav">
+                <a href="index.html">صفحه اصلی</a>
+                <a href="shop.html">فروشگاه</a>
+                <div class="dropdown">
+                    <a href="#" class="dropdown-toggle">دسته‌بندی‌ها</a>
+                    <div class="dropdown-menu" id="categories-dropdown">
+                        <!-- دسته‌بندی‌ها توسط JS بارگذاری می‌شوند -->
+                    </div>
+                </div>
+                <a href="index.html#new-arrivals">جدیدترین‌ها</a>
+            </nav>
+
+            <!-- لوگوی تایپوگرافی برند -->
+            <a href="index.html" class="brand-logo">Aproject</a>
+
+            <!-- آیکون‌های سمت چپ -->
+            <div class="header-actions">
+                <a href="shop.html" aria-label="جستجو"><svg class="icon-svg">
+                        <use href="#icon-search"></use>
+                    </svg></a>
+                <a href="admin/login.html" aria-label="حساب کاربری"><svg class="icon-svg">
+                        <use href="#icon-user"></use>
+                    </svg></a>
+                <a href="cart.html" aria-label="کیسه خرید" class="cart-btn">
+                    <svg class="icon-svg">
+                        <use href="#icon-bag"></use>
+                    </svg>
+                    <span class="bag-count">0</span>
+                </a>
+            </div>
         </div>
     </header>
 
@@ -45,14 +98,19 @@
                 </button>
             </div>
 
-
+            <div class="filter-group">
+                <h3 class="filter-title">دسته‌بندی‌ها</h3>
+                <ul class="filter-list" id="categoryFilter">
+                    <!-- دسته‌بندی‌ها توسط JS بارگذاری می‌شوند -->
+                </ul>
+            </div>
 
             <div class="filter-group">
                 <h3 class="filter-title">مرتب‌سازی</h3>
                 <ul class="filter-list" id="sortFilter">
                     <li><label><input type="radio" name="sort" value="newest" checked> جدیدترین</label></li>
-                    <li><label><input type="radio" name="sort" value="price-asc"> ارزان‌ترین</label></li>
-                    <li><label><input type="radio" name="sort" value="price-desc"> گران‌ترین</label></li>
+                    <li><label><input type="radio" name="sort" value="price_asc"> ارزان‌ترین</label></li>
+                    <li><label><input type="radio" name="sort" value="price_desc"> گران‌ترین</label></li>
                 </ul>
             </div>
         </aside>
