@@ -98,6 +98,10 @@ if ($method === 'GET') {
         $id = intval($_GET['id']);
 
         $stmt = mysqli_prepare($conn, "SELECT * FROM products WHERE id=?");
+        if (!$stmt) {
+            echo json_encode(["success" => false, "message" => mysqli_error($conn)]);
+            exit;
+        }
         mysqli_stmt_bind_param($stmt, "i", $id);
         mysqli_stmt_execute($stmt);
 
@@ -129,8 +133,8 @@ elseif ($method === 'POST') {
     $id = isset($_POST['id']) && !empty($_POST['id']) ? intval($_POST['id']) : null;
 
     $name = $_POST['name'] ?? '';
-    $price = $_POST['price'] ?? 0;
-    $stock = $_POST['stock'] ?? 0;
+    $price = floatval(str_replace(',', '', $_POST['price'] ?? 0));
+    $stock = intval($_POST['stock'] ?? 0);
     $category_id = !empty($_POST['category_id']) ? intval($_POST['category_id']) : null;
     $is_featured = intval($_POST['is_featured'] ?? 0);
 
@@ -154,6 +158,10 @@ elseif ($method === 'POST') {
         if ($imagePath) {
 
             $stmtOld = mysqli_prepare($conn, "SELECT image FROM products WHERE id=?");
+            if (!$stmtOld) {
+                echo json_encode(["success" => false, "message" => mysqli_error($conn)]);
+                exit;
+            }
             mysqli_stmt_bind_param($stmtOld, "i", $id);
             mysqli_stmt_execute($stmtOld);
 
@@ -175,6 +183,10 @@ UPDATE products
 SET name=?,price=?,image=?,stock=?,category_id=?,is_featured=?
 WHERE id=?
 ");
+            if (!$stmt) {
+                echo json_encode(["success" => false, "message" => mysqli_error($conn)]);
+                exit;
+            }
 
             mysqli_stmt_bind_param($stmt, "sdsiiii", $name, $price, $imagePath, $stock, $category_id, $is_featured, $id);
         } else {
@@ -184,6 +196,10 @@ UPDATE products
 SET name=?,price=?,stock=?,category_id=?,is_featured=?
 WHERE id=?
 ");
+            if (!$stmt) {
+                echo json_encode(["success" => false, "message" => mysqli_error($conn)]);
+                exit;
+            }
 
             mysqli_stmt_bind_param($stmt, "sdiiii", $name, $price, $stock, $category_id, $is_featured, $id);
         }
@@ -200,6 +216,10 @@ INSERT INTO products
 (name,price,image,stock,category_id,is_featured)
 VALUES (?,?,?,?,?,?)
 ");
+            if (!$stmt) {
+                echo json_encode(["success" => false, "message" => mysqli_error($conn)]);
+                exit;
+            }
             mysqli_stmt_bind_param($stmt, "sdsiii", $name, $price, $imagePath, $stock, $category_id, $is_featured);
         } else {
             $stmt = mysqli_prepare($conn, "
@@ -207,6 +227,10 @@ INSERT INTO products
 (name,price,stock,category_id,is_featured)
 VALUES (?,?,?,?,?)
 ");
+            if (!$stmt) {
+                echo json_encode(["success" => false, "message" => mysqli_error($conn)]);
+                exit;
+            }
             mysqli_stmt_bind_param($stmt, "sdiii", $name, $price, $stock, $category_id, $is_featured);
         }
     }
@@ -235,6 +259,10 @@ elseif ($method === 'DELETE') {
     $id = intval($_GET['id']);
 
     $stmt = mysqli_prepare($conn, "SELECT image FROM products WHERE id=?");
+    if (!$stmt) {
+        echo json_encode(["success" => false, "message" => mysqli_error($conn)]);
+        exit;
+    }
     mysqli_stmt_bind_param($stmt, "i", $id);
     mysqli_stmt_execute($stmt);
 
@@ -252,6 +280,10 @@ elseif ($method === 'DELETE') {
     }
 
     $stmt2 = mysqli_prepare($conn, "DELETE FROM products WHERE id=?");
+    if (!$stmt2) {
+        echo json_encode(["success" => false, "message" => mysqli_error($conn)]);
+        exit;
+    }
     mysqli_stmt_bind_param($stmt2, "i", $id);
     mysqli_stmt_execute($stmt2);
 
