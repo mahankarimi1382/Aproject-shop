@@ -141,24 +141,29 @@ style="padding:8px;width:220px;border:1px solid #ddd;border-radius:6px"
     <script>
 let categories = [];
 let allProducts = []; // ← همه محصولات برای جستجو نگهداری می‌شوند
-const DEFAULT_SIZES = ["S", "M", "L", "XL", "Free Size"];
+let allSizes = [];
 
-/* تابع ساختن سایز‌ها */
-function renderSizeInputs(productSizes = []) {
+/* تابع ساختن سایز‌ها بر اساس دسته‌بندی */
+function renderSizeInputs(categoryId) {
   const container = document.getElementById("sizeManagementContainer");
-  container.innerHTML = DEFAULT_SIZES.map((size) => {
-    const existing = productSizes.find((s) => s.size_name === size);
-    return `
-      <div style="display:flex;gap:1rem;margin-bottom:8px">
-        <input type="checkbox" class="size-enabled" data-size="${size}" ${
-      existing && existing.is_enabled ? "checked" : ""
-    }>
-        <span style="width:80px">${size}</span>
-        <input type="number" class="size-stock" data-size="${size}" value="${
-      existing ? existing.stock : 0
-    }" style="width:80px">
-      </div>`;
-  }).join("");
+  if (!categoryId) {
+    container.innerHTML = '<p style="color:#777;font-size:0.9rem">ابتدا دسته‌بندی را انتخاب کنید</p>';
+    return;
+  }
+
+  // نمایش سایزهای مربوط به این دسته‌بندی (فقط آنهایی که فعال هستند)
+  const categorySizes = allSizes.filter(s => s.category_id == categoryId && s.is_enabled);
+
+  if (categorySizes.length === 0) {
+    container.innerHTML = '<p style="color:#777;font-size:0.9rem">سایزی برای این دسته‌بندی تعریف نشده است</p>';
+    return;
+  }
+
+  container.innerHTML = categorySizes.map(s => `
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:8px">
+      <span style="display:inline-block;padding:2px 8px;background:#f0f0f0;border-radius:4px;font-size:0.9rem">${s.size_name}</span>
+    </div>
+  `).join("");
 }
 
 /* رندر کردن جدول محصولات */
@@ -191,20 +196,29 @@ function renderProducts(products) {
 
 /* بارگذاری اولیه محصولات و دسته‌بندی‌ها */
 async function loadData() {
-  const [prodRes, catRes] = await Promise.all([
-    fetch("../api/admin/products.php"),
-    fetch("../api/admin/categories.php"),
-  ]);
+  try {
+    const [prodRes, catRes, sizeRes] = await Promise.all([
+      fetch("../api/admin/products.php"),
+      fetch("../api/admin/categories.php"),
+      fetch("../api/admin/sizes.php")
+    ]);
 
-  allProducts = (await prodRes.json()).data;
-  categories = (await catRes.json()).data;
+    if (!prodRes.ok || !catRes.ok || !sizeRes.ok) throw new Error("خطا در دریافت اطلاعات از سرور");
 
-  const catSelect = document.getElementById("productCategory");
-  catSelect.innerHTML =
-    '<option value="">بدون دسته</option>' +
-    categories.map((c) => `<option value="${c.id}">${c.name}</option>`).join("");
+    allProducts = (await prodRes.json()).data || [];
+    categories = (await catRes.json()).data || [];
+    allSizes = (await sizeRes.json()).data || [];
 
-  renderProducts(allProducts);
+    const catSelect = document.getElementById("productCategory");
+    catSelect.innerHTML =
+      '<option value="">انتخاب دسته‌بندی...</option>' +
+      categories.map((c) => `<option value="${c.id}">${c.name}</option>`).join("");
+
+    renderProducts(allProducts);
+  } catch (err) {
+    console.error("Load Data Error:", err);
+    alert("خطا در بارگذاری اطلاعات.");
+  }
 }
 
 /* مودال */
@@ -214,9 +228,14 @@ document.getElementById("addProductBtn").onclick = () => {
   document.getElementById("productForm").reset();
   document.getElementById("productId").value = "";
   document.getElementById("imagePreview").style.display = "none";
-  renderSizeInputs();
+  renderSizeInputs("");
   document.getElementById("modalTitle").textContent = "افزودن محصول";
   modal.style.display = "block";
+};
+
+/* تغییر دسته‌بندی و بروزرسانی سایزها */
+document.getElementById("productCategory").onchange = (e) => {
+  renderSizeInputs(e.target.value);
 };
 
 function closeModal() {
@@ -252,7 +271,7 @@ async function editProduct(id) {
     preview.style.display = "none";
   }
 
-  renderSizeInputs(product.sizes || []);
+  renderSizeInputs(product.category_id);
   document.getElementById("modalTitle").textContent = "ویرایش محصول";
   modal.style.display = "block";
 }
@@ -260,17 +279,6 @@ async function editProduct(id) {
 /* ارسال فرم افزودن یا ویرایش */
 document.getElementById("productForm").onsubmit = async (e) => {
   e.preventDefault();
-
-  const sizes = [];
-  document.querySelectorAll(".size-enabled").forEach((checkbox, i) => {
-    const sizeName = checkbox.dataset.size;
-    const stockInput = document.querySelectorAll(".size-stock")[i];
-    sizes.push({
-      size_name: sizeName,
-      is_enabled: checkbox.checked ? 1 : 0,
-      stock: parseInt(stockInput.value) || 0,
-    });
-  });
 
   const formData = new FormData();
   formData.append("id", document.getElementById("productId").value);
@@ -281,7 +289,6 @@ document.getElementById("productForm").onsubmit = async (e) => {
   formData.append("stock", document.getElementById("productStock").value);
   formData.append("category_id", document.getElementById("productCategory").value);
   formData.append("is_featured", document.getElementById("isFeatured").checked ? 1 : 0);
-  formData.append("sizes", JSON.stringify(sizes));
 
   const imageFile = document.getElementById("productImage").files[0];
   if (imageFile) formData.append("image", imageFile);
